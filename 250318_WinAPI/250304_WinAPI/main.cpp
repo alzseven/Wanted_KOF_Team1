@@ -79,9 +79,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		WS_OVERLAPPEDWINDOW, 50, 50, width, height,
 		NULL, NULL, g_hInstance, NULL);
 
+	g_mainGame.Init();
+
 	ShowWindow(g_hWnd, nCmdShow);
 
-	g_mainGame.Init();
 
 	MSG message;
 	while (GetMessage(&message, 0, 0, 0))
