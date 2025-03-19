@@ -31,3 +31,10 @@ typedef struct tagFPOINT
 */
 extern HWND g_hWnd;
 extern HINSTANCE g_hInstance;
+
+struct combatInfo
+{
+	RECT hitRect;
+	RECT attackRect;
+	int damage;		// 공격마다 데미지 다름
+};
