@@ -3,51 +3,39 @@
 #include "KOF_CharacterState.h"
 #include "CommonFunction.h"
 
-void KOF_Character::WeakPunch(RECT& hitRect, RECT& attackRect, int& damage)		// 나
+// 새로 만듦
+void KOF_Character::WeakPunch()
 {
-	// Rect를 반환
-	// 데미지도 줘야됨
-	UpdateRect(this->hitRect, {Pos.x+50, Pos.y+50});		// 캐릭터마다 다름
-	UpdateRect(this->attackRect, { Pos.x +85, Pos.y+20});	// 캐릭터마다 다름
+	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });		
+	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });	
 
-	hitRect = this->hitRect;
-	attackRect = this->attackRect;
-	damage = weakKickDamage;
+	combat->damage = weakKickDamage;
 
 	if (currentActionIndex == State::WeakPunch) return;
 	currentFrameIndex = 0;
 	currentActionIndex = State::WeakPunch;
 	elaspedFrame = 0.0f;
-
 }
 
-void KOF_Character::StrongPunch(RECT& hitRect, RECT& attackRect, int& damage)
+void KOF_Character::StrongPunch()
 {
-	UpdateRect(this->hitRect, { Pos.x + 50, Pos.y + 50 });		// 캐릭터마다 다름
-	UpdateRect(this->attackRect, { Pos.x + 85, Pos.y + 20 });	// 캐릭터마다 다름
-
-	hitRect = this->hitRect;
-	attackRect = this->attackRect;
-	damage = strongKickDamage;
-
+	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });		// 캐릭터마다 다름
+	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });	// 캐릭터마다 다름
+	
+	combat->damage = strongKickDamage;
 
 	if (currentActionIndex == State::StrongPunch) return;
 	currentFrameIndex = 0;
 	currentActionIndex = State::StrongPunch;
 	elaspedFrame = 0.0f;
-
 }
 
-void KOF_Character::WeakKick(RECT &hitRect, RECT &attackRect, int &damage)		// 나
+void KOF_Character::WeakKick()
 {
-	// 게임 매니저에서 호출됨, 캐릭터의 피격, 공격 rect 반환, 데미지 값도 반환...
-	// Rect
-	UpdateRect(this->hitRect, { Pos.x+50, Pos.y+50 });
-	UpdateRect(this->attackRect, { Pos.x+85, Pos.y + 80 });
+	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 80 });
 
-	hitRect = this->hitRect;
-	attackRect = this->attackRect;
-	damage = weakKickDamage;
+	combat->damage = weakKickDamage;
 
 	if (currentActionIndex == State::WeakKick) return;
 	currentFrameIndex = 0;
@@ -55,14 +43,12 @@ void KOF_Character::WeakKick(RECT &hitRect, RECT &attackRect, int &damage)		// �
 	elaspedFrame = 0.0f;
 }
 
-void KOF_Character::StrongKick(RECT& hitRect, RECT& attackRect, int& damage)
+void KOF_Character::StrongKick()
 {
-	UpdateRect(this->hitRect, { Pos.x + 50, Pos.y + 50 });
-	UpdateRect(this->attackRect, { Pos.x + 85, Pos.y + 20 });
-	
-	hitRect = this->hitRect;
-	attackRect = this->attackRect;
-	damage = strongKickDamage;
+	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });
+
+	combat->damage = strongKickDamage;
 
 	if (currentActionIndex == State::StrongKick) return;
 	currentFrameIndex = 0;
@@ -94,6 +80,15 @@ void KOF_Character::Init()		// 나
 	//{
 	//	MessageBox(g_hWnd, TEXT("Image/kingStrongKick.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	//}
+
+	// combatInfo 초기화-rect 크기 설정
+	combat = new combatInfo;
+
+	combat->hitRect = { 0, 0, 30, 110 };
+	combat->attackRect = { 0,0,30, 20 };
+	combat->damage = 10;
+	//
+
 
 	currentFrameIndex = 0;
 	currentActionIndex = 0;
@@ -151,6 +146,12 @@ void KOF_Character::Release()		// 나
 	{
 		delete [] image;
 		image = nullptr;
+	}
+
+	if (combat)
+	{
+		delete combat;
+		combat = nullptr;
 	}
 }
 
@@ -240,33 +241,33 @@ void KOF_Character::Update()
 	// J key : 강펀치
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4A))
 	{
-		StrongPunch(hitRect, attackRect, strongPunchDamage);
+		StrongPunch();
 	}
 
 	// K key : 강발
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4B))
 	{
-		StrongKick(hitRect, attackRect, strongPunchDamage);
+		StrongKick();
 	}
 
 	// weak
 	// U key : 약펀치
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x55))
 	{
-		WeakPunch(hitRect, attackRect, weakPunchDamage);		// 실제론 게임매니저에서 받아야 하는 거
+		WeakPunch();
 	}
 	// I key : 강펀치
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x49))
 	{
-		WeakKick(hitRect, attackRect, weakKickDamage);
+		WeakKick();
 	}
 }
 
 void KOF_Character::Render(HDC hdc)
 {
 	// test
-	RenderRect(hdc, hitRect);
-	RenderRect(hdc, attackRect);
+	RenderRect(hdc, combat->hitRect);
+	RenderRect(hdc, combat->attackRect);
 	// test
 	//RenderRectAtCenter(hdc, Pos.x, Pos.y, 100, 110);
 	if (image)

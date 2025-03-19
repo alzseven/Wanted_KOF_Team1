@@ -21,12 +21,22 @@ private:
 	int currentActionIndex;
 	float elaspedFrame;
 
+	combatInfo* combat;
+
 public:
 	void WeakPunch(RECT& hitRect, RECT& attackRect, int& damage);
 	void StrongPunch(RECT& hitRect, RECT& attackRect, int& damage);
 
 	void WeakKick(RECT& hitRect, RECT& attackRect, int& damage);	// ³ª
 	void StrongKick(RECT& hitRect, RECT& attackRect, int& damage);
+
+
+	void WeakPunch();
+	void StrongPunch();
+
+	void WeakKick();
+	void StrongKick();
+
 	bool Guard(bool isSuccess);
 
 	void Init();		// ³ª
