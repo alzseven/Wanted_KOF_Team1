@@ -1,6 +1,7 @@
 #include "MainGame.h"
 #include "CommonFunction.h"
 #include "Image.h"
+#include "KOF_Character.h"
 #include "KOF_Iori.h"
 
 /*
@@ -25,10 +26,22 @@ void MainGame::Init()
 
 	iori = new KOF_Iori();
 	iori->Init();
+
+	// test
+	king = new KOF_Character();
+	king->Init();
+
 }
 
 void MainGame::Release()
 {
+	if (king)
+	{
+		king->Release();
+		delete king;
+		king = nullptr;
+	}
+
 	if (iori)
 	{
 		iori->Release();
@@ -53,6 +66,9 @@ void MainGame::Release()
 
 void MainGame::Update()
 {
+	if (king)
+		king->Update();
+
 	if (iori)
 		iori->Update();
 
@@ -66,6 +82,8 @@ void MainGame::Render(HDC hdc)
 
 	backGround->Render(hBackBufferDC);
 	iori->Render(hBackBufferDC);
+
+	king->Render(hBackBufferDC);
 
 	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
 	TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
