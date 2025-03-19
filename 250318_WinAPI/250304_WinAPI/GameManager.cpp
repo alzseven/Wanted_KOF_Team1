@@ -16,18 +16,32 @@ void GameManager::Init()
     // TODO: Set random two characters how?
     CharacterInfo charinfo = CharacterInfo{
         100, 5, 7, 10, 14,
-        "Chang", new SpriteSheetInfo[]{
+        "Mai", new SpriteSheetInfo[10]{
             SpriteSheetInfo{
-                "Move",
-            TEXT("Image/chang_move.bmp"),
-            2100,188,10,1,true,RGB(255,0,255),
+                "Mai_Idle",
+            TEXT("Image/Mai_Shiranui/Mai_Idle.bmp"),
+            1455,114,15,1,true,RGB(255,255,255)
         },
-        SpriteSheetInfo{
-            "punch_weak",
-        TEXT("Image/chang_punch_weak.bmp"),
-        1050,188,5,1,true,RGB(255,0,255),
+            SpriteSheetInfo{
+                "Mai_Foward",
+            TEXT("Image/Mai_Shiranui/Mai_Foward.bmp"),
+            648, 124, 6, 1,true,RGB(255,255,255)
+        },  SpriteSheetInfo{
+                "Mai_Back",
+            TEXT("Image/Mai_Shiranui/Mai_Back.bmp"),
+            552, 121, 6, 1,true,RGB(255,255,255)
+        },
+            SpriteSheetInfo{
+                "Mai_StrongPunch",
+            TEXT("Image/Mai_Shiranui/Mai_StrongPunch.bmp"),
+            773, 135, 6, 1,true,RGB(255,255,255)
+        },
+            SpriteSheetInfo{
+                "Mai_StrongKick",
+            TEXT("Image/Mai_Shiranui/Mai_StrongKick.bmp"),
+            979, 133, 7, 1,true,RGB(255,255,255)
         }
-        
+
         }
     };
     

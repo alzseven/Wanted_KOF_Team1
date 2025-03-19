@@ -4,18 +4,18 @@
 #include "CommonFunction.h"
 #include "Image.h"
 
-void KOF_Character::Init(/*캐릭터 이름, 캐릭터 데미지 등 인자로 받아서 초기화 해줘야 함*/)
+void KOF_Character::Init(bool isMovable)
 {
 	health = 100;
 	weakPunchDamage = 10;
 	weakKickDamage = 15;
 	strongPunchDamage = 20;
 	strongKickDamage = 25;
-	Pos = {30, 300};
+	pos = {30, 300};
 	moveSpeed = 10.0f;
-	characterName = "Mai";
-	//hitRect;
-	//attackRect;
+
+	characterName = "None";
+
 	currentFrameIndex = 0;
 	currentActionState = 0;
 	elaspedFrame = 0.0f;
@@ -23,90 +23,133 @@ void KOF_Character::Init(/*캐릭터 이름, 캐릭터 데미지 등 인자로 �
     currentCombatInfo.hitRect = hitRect;
     hitRect = RECT{ (int)(pos.x + 150), (int)(pos.y + 100), (int)(pos.x + 150)+85, (int)(pos.y + 100) + 30};
 	
-    // currentCombatInfo = COMBATINFO{ hitRect, weakPunchDamage};
     isWeakPunching = true;
-
-	/*	image = new Image();
-	if (FAILED(image->Init(TEXT("Image/Mai_Shiranui/Mai.bmp"), 1455, 627, 15, 5,
-		true, RGB(255, 255, 255))))
-	{
-		MessageBox(g_hWnd, TEXT("Image/Mai.bmp ���� �ε忡 ����"), TEXT("���"), MB_OK);
-	}
-	*/
-
-	image = new Image[5];
-
-	if (FAILED(image[0].Init(TEXT("Image/Mai_Shiranui/Mai_Idle.bmp"), 1455, 114, 15, 1,
-		true, RGB(255, 255, 255))))
-	{
-		MessageBox(g_hWnd, TEXT("Image/Mai_Idle.bmp ���� �ε忡 ����"), TEXT("���"), MB_OK);
-	}
-
-	if (FAILED(image[1].Init(TEXT("Image/Mai_Shiranui/Mai_Back.bmp"), 552, 121, 6, 1,
-		true, RGB(255, 255, 255))))
-	{
-		MessageBox(g_hWnd, TEXT("Image/Mai_Back.bmp ���� �ε忡 ����"), TEXT("���"), MB_OK);
-	}
-
-	if (FAILED(image[2].Init(TEXT("Image/Mai_Shiranui/Mai_Foward.bmp"), 648, 124, 6, 1,
-		true, RGB(255, 255, 255))))
-	{
-		MessageBox(g_hWnd, TEXT("Image/Mai_Foward.bmp ���� �ε忡 ����"), TEXT("���"), MB_OK);
-	}
-
-	if (FAILED(image[3].Init(TEXT("Image/Mai_Shiranui/Mai_StrongPunch.bmp"), 773, 135, 6, 1,
-		true, RGB(255, 255, 255))))
-	{
-		MessageBox(g_hWnd, TEXT("Image/Mai_StrongPunch.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
-	}
-
-	if (FAILED(image[4].Init(TEXT("Image/Mai_Shiranui/Mai_StrongKick.bmp"), 979, 133, 7, 1,
-		true, RGB(255, 255, 255))))
-	{
-		MessageBox(g_hWnd, TEXT("Image/Mai_StrongKick.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
-	}
 
     this->isMoveable = isMoveable;
     
-    elapsedFrame = 0;
+
+	elaspedFrame = 0;
     currAnimaionFrame = 0;
+
 }
 
+void KOF_Character::Init(const CharacterInfo info, bool isMoveable)
 {
-}
 
-{
-        MessageBox(g_hWnd, info.spriteSheet[1].filename, TEXT("Warning"), MB_OK);
-    }
-
-
-
-
-	}
+	image = new Image[10];
 	
+	pos = { 0.0f, 0.0f };
+	moveSpeed = 5.0f;
+	
+	for (int i = 0; i < 10; i++)
 	{
+		if (FAILED(image[i].Init(info.spriteSheet[i].filename,
+			info.spriteSheet[i].width, info.spriteSheet[i].height,
+			info.spriteSheet[i].maxFrameX, info.spriteSheet[i].maxFrameY,
+			info.spriteSheet[i].isTransparent, info.spriteSheet[i].transColor)))
+		{
+			MessageBox(g_hWnd, info.spriteSheet[i].filename, TEXT("Warning"), MB_OK);
+		}
 	}
 
+
+	health = info.health;
+	weakPunchDamage = info.weakPunchDamage;
+	weakKickDamage = info.weakKickDamage;
+	strongPunchDamage = info.strongPunchDamage;
+	strongKickDamage = info.strongKickDamage;
+	characterName = info.characterName;
+
+	hitRect = RECT{ 0, 0, 210, 180 };
+	// hitRect = RECT{ 0, 0, info.spriteSheet[0].width/info.spriteSheet[0].maxFrameX, info.spriteSheet[0].height/info.spriteSheet[0].maxFrameY};
+	attackRect = RECT{ 0, 0, 0,0 };
+
+	this->isMoveable = isMoveable;
+	elaspedFrame = 0.0f;
+	currAnimaionFrame = 0;
+	isWeakPunching = false;
+	
+}
+
+void KOF_Character::Release()
+{
+	delete[] image;
+}
+
+void KOF_Character::Update()
+{
+
+
+	float frameSpeed = 20.0f;
+
+	elaspedFrame += frameSpeed;
+
+	if (elaspedFrame >= 100.0f)
+	{
+		currentFrameIndex++;
+
+		elaspedFrame = RESET;
+	}
+
+	if (currentFrameIndex >= 15 && currentActionState == static_cast<int>(State::Idle))
+	{
+		currentFrameIndex = RESET;
+	}
+
+	switch (currentActionState)
+	{
+	case static_cast<int>(State::StrongPunch):
+		if (currentFrameIndex >= 6)
 		{
+			currentFrameIndex = RESET;
+			currentActionState = static_cast<int>(State::Idle);
+		}
+		break;
+	case static_cast<int>(State::StrongKick):
+		if (currentFrameIndex >= 7)
+		{
+			currentFrameIndex = RESET;
+			currentActionState = static_cast<int>(State::Idle);
 		}
 		break;
 	}
 
-	{
-	{
-		{
-		}
-            return;
-	}
-	{
 
+	// D key : 앞이동
+	if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
 	{
+		currentFrameIndex = RESET;
+		currentActionState = static_cast<int>(State::MovingFoward);
 	}
+	if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 	{
-
+		pos.x += 2.0f * (frameSpeed / moveSpeed);
+		if (currentFrameIndex >= 6)
 		{
+			currentFrameIndex = RESET;
 		}
-                elapsedFrame = 0;
+	}
+	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
+	{
+		currentFrameIndex = RESET;
+		currentActionState = static_cast<int>(State::Idle);
+	}
+
+
+	// A Key : 뒤로 이동
+	if (KeyManager::GetInstance()->IsOnceKeyDown(0x41))
+	{
+		currentFrameIndex = 0;
+		currentActionState = static_cast<int>(State::MovingBack);
+	}
+	if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
+	{
+		pos.x -= 2.0f * (frameSpeed / moveSpeed);
+
+		if (currentFrameIndex >= 6)
+		{
+			currentFrameIndex = RESET;
+		}
 	}
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 	{
@@ -114,10 +157,18 @@ void KOF_Character::Init(/*캐릭터 이름, 캐릭터 데미지 등 인자로 �
 		currentActionState = static_cast<int>(State::Idle);
 	}
 
+	// J key : 강펀치
+	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4A))
 	{
+		StrongPunch();
 	}
+
+	// K key : 강발
+	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4B))
+	{
+		StrongKick();
 	}
-	
+
 
 
 }
@@ -126,27 +177,24 @@ void KOF_Character::Render(HDC hdc)
 {
 	// 히트박스 확인용
 	//if (currentActionState == static_cast<int>(State::Idle))
-		RenderRect(hdc, Pos.x + 27, Pos.y, 38, 94);
+		RenderRect(hdc, pos.x + 27, pos.y, 38, 94);
 
 	if (image)
-		image[currentActionState].Render(hdc,Pos.x,Pos.y,currentFrameIndex,false);
+		image[currentActionState].Render(hdc,pos.x,pos.y,currentFrameIndex,false);
 
 	// 히트박스 확인용
 	if (currentActionState == static_cast<int>(State::StrongKick))
-		RenderRect(hdc, Pos.x + 107, Pos.y, 25, 94);
+		RenderRect(hdc, pos.x + 107, pos.y, 25, 94);
 	 
 	if (currentActionState == static_cast<int>(State::StrongPunch))
-		RenderRect(hdc, Pos.x + 97, Pos.y, 20, 94);
+		RenderRect(hdc, pos.x + 97, pos.y, 20, 94);
 
 }
 
 
 void KOF_Character::WeakPunch()
 {
-        // RenderRect(hdc, pos.x + 150, pos.y + 100, 85, 30);
-        // RenderRect(hdc, pos.x + 65 * ( pos.x > 400 ? -0 : 0), pos.y, 150, 180);
-        punchImage->Render(hdc, pos.x + 65 * ( pos.x > 400 ? -0 : 0), pos.y, currAnimaionFrame, !isMoveable);
-
+    
 }
 
 void KOF_Character::StrongPunch()
@@ -157,14 +205,10 @@ void KOF_Character::StrongPunch()
 	elaspedFrame = RESET;
 }
 
-int KOF_Character::GetHealth() { return health; }
-
 void KOF_Character::WeakKick()
 {
-RECT KOF_Character::GetHitRect() { return hitRect; }
 
 }
-RECT KOF_Character::GetAttackRect() { return attackRect; }
 
 void KOF_Character::StrongKick()
 {
@@ -172,6 +216,11 @@ void KOF_Character::StrongKick()
 	currentFrameIndex = RESET;
 	currentActionState = static_cast<int>(State::StrongKick);
 	elaspedFrame = RESET;
+}
+
+bool KOF_Character::Guard(bool)
+{
+	return true;
 }
 
 void KOF_Character::GetDamage(int damage)
@@ -190,3 +239,10 @@ void KOF_Character::Move(int dirX)
     pos.x += moveSpeed * dirX;
     UpdateRect(hitRect, pos);
 }
+
+int KOF_Character::GetHealth() { return health; }
+
+
+RECT KOF_Character::GetHitRect() { return hitRect; }
+
+RECT KOF_Character::GetAttackRect() { return attackRect; }

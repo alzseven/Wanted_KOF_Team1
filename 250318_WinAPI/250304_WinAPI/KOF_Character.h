@@ -1,61 +1,53 @@
-Ôªø#pragma once
+#pragma once
 #include "CommonFunction.h"
 #include "GameObject.h"
-
 
 class Image;
 
 class KOF_Character : public GameObject
 {
 private:
-
-	int health;
-	int weakPunchDamage;
-	int weakKickDamage;
-	int strongPunchDamage;
-	int strongKickDamage;
-    //TODO : 
+    int health;
+    int weakPunchDamage;
+    int weakKickDamage;
+    int strongPunchDamage;
+    int strongKickDamage;
     FPOINT pos;
-	float moveSpeed;
-	string characterName;
-	RECT hitRect;
-	RECT attackRect;
+    float moveSpeed;
+    string characterName;
+    RECT hitRect;
+    RECT attackRect;
 
-	COMBATINFO combatInfo;
-	UIINFO uiInfo;
-    Image* moveimage;
-    Image* punchImage;
-    int elapsedFrame;
+
     int currAnimaionFrame;
 
-	Image* image;
-	int currentFrameIndex;
-	// ÌòÑÏû¨ Ï∫êÎ¶≠ÌÑ∞Ïùò ÏÉÅÌÉú Ï†ÄÏû•
-	int currentActionState;
-	float elaspedFrame;
     bool isWeakPunching;
     bool isMoveable;
     COMBATINFO currentCombatInfo;
+    UIINFO uiInfo;
+
+    Image* image;
+    int currentFrameIndex;
+
+    // «ˆ¿Á ƒ≥∏Ø≈Õ¿« ªÛ≈¬ ¿˙¿Â
+    int currentActionState;
+    float elaspedFrame;
+
+
 
 public:
+    void WeakPunch();
+    void StrongPunch();
+    void WeakKick();
+    void StrongKick();
+    bool Guard(bool);
 
-	void WeakPunch();
-	void StrongPunch();
-	void WeakKick();
-	void StrongKick();
-	bool Guard(bool);
-
-	void Init();
+    
     void Init(bool isMoveable = true);
     void Init(const CharacterInfo info, bool isMoveable = true);
-	void Release();
-	void Update();
-	void Render(HDC hdc);
-
-	COMBATINFO GetCombatInfo();
-	UIINFO GetUIInfo();
-
-
+    void Release();
+    void Update();
+    void Render(HDC hdc);
     //---
     int GetHealth();
     RECT GetHitRect();
@@ -74,4 +66,5 @@ public:
         UpdateRect(attackRect, pos);
     }    
 };
+
 

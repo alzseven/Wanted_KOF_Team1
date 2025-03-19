@@ -26,11 +26,19 @@ typedef struct tagFPOINT
 	float y;
 } FPOINT;
 
+
+
+/*
+	extern 키워드 : 변수나 함수가 다른 파일에 정의되어 있다 라는
+	사실을 알리는 키워드.
+*/
+extern HWND g_hWnd;
+extern HINSTANCE g_hInstance;
+
 /* 전투 정보를 담는 구조체 */
 typedef struct combatInfo
 {
-	RECT hitRect = {0,0,0,0};
-	RECT atackRect = {0,0,0,0};
+	RECT hitRect;
 	int damage = 0;
 
 } COMBATINFO;
@@ -42,21 +50,6 @@ typedef struct uiInfo
 	int health;
 } UIINFO;
 
-
-/*
-	extern 키워드 : 변수나 함수가 다른 파일에 정의되어 있다 라는
-	사실을 알리는 키워드.
-*/
-extern HWND g_hWnd;
-extern HINSTANCE g_hInstance;
-
-
-typedef struct combatInfo
-{
-	RECT hitRect;
-	int damage = 0;
-
-} COMBATINFO;
 
 struct SpriteSheetInfo
 {
