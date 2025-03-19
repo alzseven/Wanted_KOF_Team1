@@ -20,17 +20,8 @@ void MainGame::Release()
 		backGround = nullptr;
 	}
 
-	if (backBuffer)
-	{
-		backBuffer->Release();
-		delete backBuffer;
-		backBuffer = nullptr;
-	}
-
 	gameManager->Release();
 	delete gameManager;
-
-
 }
 
 void MainGame::Update()

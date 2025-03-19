@@ -46,12 +46,12 @@ void GameManager::Init()
     };
     
     character1 = new KOF_Character();
-    character1->Init(charinfo, true);
+    character1->Init(charinfo, true, false);
     character1->SetPos({200, 300});
     
     character2 = new KOF_Character();
-    character2->Init(charinfo, false);
-    character2->SetPos({500, 300});
+    character2->Init(charinfo, true, true);
+    character2->SetPos({700, 300});
 
     // UI Init
     character1UI = new UI;

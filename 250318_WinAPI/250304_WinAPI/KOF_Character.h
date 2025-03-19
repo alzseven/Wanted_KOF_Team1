@@ -33,6 +33,8 @@ private:
     int currentActionState;
     float elaspedFrame;
 
+    bool isFlip;
+
 
 
 public:
@@ -44,7 +46,7 @@ public:
 
     
     void Init(bool isMoveable = true);
-    void Init(const CharacterInfo info, bool isMoveable = true);
+    void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false);
     void Release();
     void Update();
     void Render(HDC hdc);

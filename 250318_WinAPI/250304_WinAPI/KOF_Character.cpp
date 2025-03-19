@@ -21,27 +21,26 @@ void KOF_Character::Init(bool isMovable)
 	elaspedFrame = 0.0f;
     currentCombatInfo.damage = weakPunchDamage;
     currentCombatInfo.hitRect = hitRect;
-    hitRect = RECT{ (int)(pos.x + 150), (int)(pos.y + 100), (int)(pos.x + 150)+85, (int)(pos.y + 100) + 30};
+    hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
 	
     isWeakPunching = true;
 
     this->isMoveable = isMoveable;
-    
 
 	elaspedFrame = 0;
     currAnimaionFrame = 0;
 
 }
 
-void KOF_Character::Init(const CharacterInfo info, bool isMoveable)
+void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 {
 
-	image = new Image[10];
+	image = new Image[5];
 	
 	pos = { 0.0f, 0.0f };
 	moveSpeed = 5.0f;
-	
-	for (int i = 0; i < 10; i++)
+		
+	for (int i = 0; i < 5; i++)
 	{
 		if (FAILED(image[i].Init(info.spriteSheet[i].filename,
 			info.spriteSheet[i].width, info.spriteSheet[i].height,
@@ -59,8 +58,9 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable)
 	strongPunchDamage = info.strongPunchDamage;
 	strongKickDamage = info.strongKickDamage;
 	characterName = info.characterName;
+	this->isFlip = isFlip;
 
-	hitRect = RECT{ 0, 0, 210, 180 };
+	hitRect = RECT{ 0, 0, 50, 100 };
 	// hitRect = RECT{ 0, 0, info.spriteSheet[0].width/info.spriteSheet[0].maxFrameX, info.spriteSheet[0].height/info.spriteSheet[0].maxFrameY};
 	attackRect = RECT{ 0, 0, 0,0 };
 
@@ -179,15 +179,20 @@ void KOF_Character::Render(HDC hdc)
 	//if (currentActionState == static_cast<int>(State::Idle))
 		RenderRect(hdc, pos.x + 27, pos.y, 38, 94);
 
+
 	if (image)
-		image[currentActionState].Render(hdc,pos.x,pos.y,currentFrameIndex,false);
+		image[currentActionState].Render(hdc,pos.x,pos.y,currentFrameIndex,isFlip);
 
 	// 히트박스 확인용
 	if (currentActionState == static_cast<int>(State::StrongKick))
-		RenderRect(hdc, pos.x + 107, pos.y, 25, 94);
-	 
+		//RenderRect(hdc, pos.x + 107, pos.y, 25, 94);
+		RenderRect(hdc,(int)(pos.x + 100 ), (int)(pos.y), 20 ,  100);
+		
+
 	if (currentActionState == static_cast<int>(State::StrongPunch))
-		RenderRect(hdc, pos.x + 97, pos.y, 20, 94);
+		//RenderRect(hdc, pos.x + 97, pos.y, 20, 94);
+		RenderRect(hdc, (int)(pos.x + 100), (int)(pos.y),  20 ,  100);
+
 
 }
 
@@ -202,6 +207,9 @@ void KOF_Character::StrongPunch()
 	if (currentActionState == static_cast<int>(State::StrongPunch)) return;
 	currentFrameIndex = RESET;
 	currentActionState = static_cast<int>(State::StrongPunch);
+	currentCombatInfo.damage = strongPunchDamage;
+	currentCombatInfo.hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
+
 	elaspedFrame = RESET;
 }
 
@@ -215,6 +223,9 @@ void KOF_Character::StrongKick()
 	if (currentActionState == static_cast<int>(State::StrongKick)) return;
 	currentFrameIndex = RESET;
 	currentActionState = static_cast<int>(State::StrongKick);
+	currentCombatInfo.damage = strongKickDamage;
+	currentCombatInfo.hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
+
 	elaspedFrame = RESET;
 }
 
