@@ -3,43 +3,41 @@
 #include "KOF_CharacterState.h"
 #include "CommonFunction.h"
 #include "Image.h"
+#include "KOF_CharacterFiniteStateMachine.h"
+#include "KOF_CharacterFiniteStateMachineState.h"
 
-void KOF_Character::Init(bool isMovable)
-{
-	health = 100;
-	weakPunchDamage = 10;
-	weakKickDamage = 15;
-	strongPunchDamage = 20;
-	strongKickDamage = 25;
-	pos = {30, 300};
-	moveSpeed = 10.0f;
-
-	characterName = "None";
-
-	currentFrameIndex = 0;
-	currentActionState = 0;
-	elaspedFrame = 0.0f;
-    currentCombatInfo.damage = weakPunchDamage;
-    currentCombatInfo.hitRect = hitRect;
-    hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
-	
-    isWeakPunching = true;
-
-    this->isMoveable = isMoveable;
-
-	elaspedFrame = 0;
-    currAnimaionFrame = 0;
-
-}
+// void KOF_Character::Init(bool isMovable)
+// {
+// 	health = 100;
+// 	weakPunchDamage = 10;
+// 	weakKickDamage = 15;
+// 	strongPunchDamage = 20;
+// 	strongKickDamage = 25;
+// 	pos = {30, 300};
+// 	moveSpeed = 10.0f;
+//
+// 	characterName = "None";
+//
+// 	currentFrameIndex = 0;
+// 	currentActionState = 0;
+// 	elaspedFrame = 0.0f;
+//     currentCombatInfo.damage = weakPunchDamage;
+//     currentCombatInfo.hitRect = hitRect;
+//     hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
+// 	
+//     isWeakPunching = true;
+//
+//     this->isMoveable = isMoveable;
+//
+// 	elaspedFrame = 0;
+//     currAnimaionFrame = 0;
+//
+// }
 
 void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 {
-
+	//TODO:
 	image = new Image[5];
-	
-	pos = { 0.0f, 0.0f };
-	moveSpeed = 5.0f;
-		
 	for (int i = 0; i < 5; i++)
 	{
 		if (FAILED(image[i].Init(info.spriteSheet[i].filename,
@@ -50,7 +48,9 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 			MessageBox(g_hWnd, info.spriteSheet[i].filename, TEXT("Warning"), MB_OK);
 		}
 	}
-
+	
+	pos = { 0.0f, 0.0f };
+	moveSpeed = 5.0f;
 
 	health = info.health;
 	weakPunchDamage = info.weakPunchDamage;
@@ -60,6 +60,7 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 	characterName = info.characterName;
 	this->isFlip = isFlip;
 
+	//TODO: 
 	hitRect = RECT{ 0, 0, 50, 100 };
 	// hitRect = RECT{ 0, 0, info.spriteSheet[0].width/info.spriteSheet[0].maxFrameX, info.spriteSheet[0].height/info.spriteSheet[0].maxFrameY};
 	attackRect = RECT{ 0, 0, 0,0 };
@@ -67,8 +68,15 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 	this->isMoveable = isMoveable;
 	elaspedFrame = 0.0f;
 	currAnimaionFrame = 0;
+	//TODO:
 	isWeakPunching = false;
-	
+
+	KOF_CharacterStateMove moveState;
+	moveState.Init(this);
+	states = new KOF_CharacterFiniteStateMachineState[]{
+		moveState,
+	};
+	fsm->Init(states);
 }
 
 void KOF_Character::Release()
@@ -78,8 +86,50 @@ void KOF_Character::Release()
 
 void KOF_Character::Update()
 {
+	fsm->Update();
 
-
+	switch (currentActionState)
+	{
+	case State::Idle:
+		if (KeyManager::GetInstance()->IsOnceKeyDown(AttackKey))
+		{
+			fsm->SetState(Attack);
+		}
+		else if (KeyManager::GetInstance()->IsStayKeyDown(MoveKey))
+		{
+			fsm->SetState(Move);
+		}
+		else if (KeyManager::GetInstance()->IsStayKeyDown(BackKey))
+		{
+			// if enemy close
+			//fsm->SetState(Guard);
+			// else
+			// move backward
+			fsm->SetState(Move);
+		}
+		break;
+	case State::MovingFoward:
+		if (KeyManager::GetInstance()->IsOnceKeyDown(AttackKey))
+		{
+			fsm->SetState(Attack);
+		}
+		else if (KeyManager::GetInstance()->IsOnceKeyUp(MoveKey))
+		{
+			fsm->SetState(State::Idle);
+		}
+		break;
+	case State::StrongPunch:
+		// exit on animation ends
+		break;
+	case State::Guard:
+		if (KeyManager::GetInstance()->IsOnceKeyUp(BackKey))
+		{
+			fsm->SetState(State::Idle);
+		}
+		break;
+	default: ;
+	}
+	
 	float frameSpeed = 20.0f;
 
 	elaspedFrame += frameSpeed;
@@ -257,3 +307,8 @@ int KOF_Character::GetHealth() { return health; }
 RECT KOF_Character::GetHitRect() { return hitRect; }
 
 RECT KOF_Character::GetAttackRect() { return attackRect; }
+
+void KOF_Character::LoopFrame(int frameIndexMax)
+{
+	currentFrameIndex = currentFrameIndex > frameIndexMax ? RESET : currentFrameIndex++;
+}

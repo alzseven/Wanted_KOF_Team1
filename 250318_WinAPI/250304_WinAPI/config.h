@@ -63,6 +63,8 @@ struct SpriteSheetInfo
 	COLORREF transColor;
 };
 
+//TODO: maxHealth;
+//TODO: moveSpeed;
 struct CharacterInfo
 {
 	int health;

@@ -2,6 +2,8 @@
 #include "CommonFunction.h"
 #include "GameObject.h"
 
+class KOF_CharacterFiniteStateMachineState;
+class KOF_CharacterFiniteStateMachine;
 class Image;
 
 class KOF_Character : public GameObject
@@ -35,7 +37,8 @@ private:
 
     bool isFlip;
 
-
+    KOF_CharacterFiniteStateMachine* fsm;
+    KOF_CharacterFiniteStateMachineState* states;
 
 public:
     void WeakPunch();
@@ -45,7 +48,7 @@ public:
     bool Guard(bool);
 
     
-    void Init(bool isMoveable = true);
+    // void Init(bool isMoveable = true);
     void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false);
     void Release();
     void Update();
@@ -66,7 +69,8 @@ public:
         this->pos = pos;
         UpdateRect(hitRect, pos);
         UpdateRect(attackRect, pos);
-    }    
+    }
+    bool GetIsFlip() const { return this->isFlip;}
 };
 
 
