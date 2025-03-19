@@ -2,6 +2,7 @@
 #include "CommonFunction.h"
 #include "Image.h"
 #include "KOF_Iori.h"
+#include "Background.h"
 
 /*
 	실습1. 이오리 집에 보내기
@@ -16,12 +17,9 @@ void MainGame::Init()
 		MessageBox(g_hWnd, 
 			TEXT("백버퍼 생성 실패"), TEXT("경고"), MB_OK);
 	}
-	backGround = new Image();
-	if (FAILED(backGround->Init(TEXT("Image/BackGround.bmp"), WINSIZE_X, WINSIZE_Y)))
-	{
-		MessageBox(g_hWnd,
-			TEXT("Image/backGround.bmp 생성 실패"), TEXT("경고"), MB_OK);
-	}
+
+	backGround = new Background();
+	backGround->Init();
 
 	iori = new KOF_Iori();
 	iori->Init();
@@ -53,6 +51,9 @@ void MainGame::Release()
 
 void MainGame::Update()
 {
+	if (backGround)
+		backGround->Update();
+
 	if (iori)
 		iori->Update();
 

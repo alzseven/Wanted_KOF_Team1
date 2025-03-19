@@ -3,6 +3,7 @@
 
 class Image;
 class KOF_Iori;
+class Background;
 class MainGame : public GameObject
 {
 private:
@@ -14,7 +15,7 @@ private:
 	wchar_t szText[128];
 
 	Image* backBuffer;
-	Image* backGround;
+	Background* backGround;
 	KOF_Iori* iori;
 
 public:
