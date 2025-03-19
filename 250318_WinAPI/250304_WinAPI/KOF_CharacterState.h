@@ -5,6 +5,8 @@ enum State {
 	MovingFoward,
 	MovingBack,
 	StrongPunch,
-	StrongKick
+	StrongKick,
+	WeakPunch,
+	WeakKick
 
 };

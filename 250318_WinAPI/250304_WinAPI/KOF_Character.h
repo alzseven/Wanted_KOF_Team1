@@ -23,10 +23,10 @@ private:
 
 public:
 	void WeakPunch(RECT& hitRect, RECT& attackRect, int& damage);
-	// ³ª
-	void StrongPunch();
+	void StrongPunch(RECT& hitRect, RECT& attackRect, int& damage);
+
 	void WeakKick(RECT& hitRect, RECT& attackRect, int& damage);	// ³ª
-	void StrongKick();
+	void StrongKick(RECT& hitRect, RECT& attackRect, int& damage);
 	bool Guard(bool isSuccess);
 
 	void Init();		// ³ª
