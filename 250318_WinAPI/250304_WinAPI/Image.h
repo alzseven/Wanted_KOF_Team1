@@ -33,6 +33,8 @@ public:
 		int currFrameX;
 		int currFrameY;
 
+		int attackFrameX;
+
 		tagImageInfo()
 		{
 			resID = 0;
