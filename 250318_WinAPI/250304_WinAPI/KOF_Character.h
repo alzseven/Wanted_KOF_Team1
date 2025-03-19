@@ -47,7 +47,7 @@ public:
 
     //TODO:
     inline COMBATINFO GetCurrentAttack(){ return this->currentCombatInfo;}
-    inline void ResetAttack(){ currentCombatInfo.damage = 0; currentCombatInfo.hitRect.left = 0; currentCombatInfo.hitRect.top = 0;}
+    void ResetAttack();
     void GetDamage(int damage);
     void Move();
     void Move(int dirX);
@@ -58,3 +58,5 @@ public:
         UpdateRect(attackRect, pos);
     }    
 };
+
+

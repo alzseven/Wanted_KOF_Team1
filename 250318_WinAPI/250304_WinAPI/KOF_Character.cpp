@@ -6,8 +6,9 @@
 void KOF_Character::WeakPunch()
 {
     currentCombatInfo.damage = weakPunchDamage;
-    currentCombatInfo.hitRect = hitRect;
-    hitRect = RECT{ (int)(pos.x + 150), (int)(pos.y + 100), (int)(pos.x + 150)+85, (int)(pos.y + 100) + 30};
+    currentCombatInfo.hitRect = RECT{ 150, 100, 235, 130};
+    UpdateRect(currentCombatInfo.hitRect, pos);
+    // hitRect = ;
     
     // currentCombatInfo = COMBATINFO{ hitRect, weakPunchDamage};
     isWeakPunching = true;
@@ -120,9 +121,8 @@ void KOF_Character::Update()
             {
                 currAnimaionFrame = 0;
                 isWeakPunching = false;
-                attackRect.left=9999;
-                attackRect.top=9999;
-                currentCombatInfo.damage = 0;
+                UpdateRect(currentCombatInfo.hitRect, {0,0});
+                currentCombatInfo.damage = 1;
             }
             return;
         }
@@ -203,4 +203,9 @@ void KOF_Character::Move(int dirX)
 {
     pos.x += moveSpeed * dirX;
     UpdateRect(hitRect, pos);
+}
+
+void KOF_Character::ResetAttack()
+{
+    currentCombatInfo.damage = 0; UpdateRect(currentCombatInfo.hitRect, {0,0});
 }
