@@ -71,8 +71,6 @@ void KOF_Character::Init()		// 나
 	Pos = {30.0f, 300.0f};
 	moveSpeed = 10.0f;
 	characterName = "King";
-	hitRect =GetRect(Pos.x, Pos.y, 30, 110);    // 피격범위 - 나중에 UpdateRect로 위치에 맞게 업데이트
-	attackRect = GetRect(Pos.x, Pos.y, 30, 20); // 공격범위 - 마찬가지
 	
 	//image = new Image;
 	//if (FAILED(image->Init(TEXT("Image/kingStrongKick.bmp"), 1000, 110, 10, 1,

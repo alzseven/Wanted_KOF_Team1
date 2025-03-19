@@ -14,8 +14,7 @@ private:
 	FPOINT Pos;
 	float moveSpeed;
 	string characterName;
-	RECT hitRect;    // 피격범위
-	RECT attackRect; // 공격범위
+
 	Image* image;
 	int currentFrameIndex;
 	int currentActionIndex;
@@ -24,13 +23,6 @@ private:
 	combatInfo* combat;
 
 public:
-	void WeakPunch(RECT& hitRect, RECT& attackRect, int& damage);
-	void StrongPunch(RECT& hitRect, RECT& attackRect, int& damage);
-
-	void WeakKick(RECT& hitRect, RECT& attackRect, int& damage);	// 나
-	void StrongKick(RECT& hitRect, RECT& attackRect, int& damage);
-
-
 	void WeakPunch();
 	void StrongPunch();
 
