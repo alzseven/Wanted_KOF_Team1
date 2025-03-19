@@ -63,6 +63,12 @@ inline void RenderEllipseAtCenter(HDC hdc, int centerX, int centerY, int width, 
 		centerX + (width / 2), centerY + (height / 2));
 }
 
+// Ãß°¡
+inline void RenderRect(HDC hdc, RECT rect)
+{
+	Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
+}
+
 inline bool PointInRect(POINT ptMouse, RECT rc)
 {
 	if (ptMouse.x < rc.left || ptMouse.x > rc.right
