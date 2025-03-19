@@ -179,10 +179,62 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
         BitBlt(
             hdc,
             destX, destY,
-            imageInfo->width / 9,
+            imageInfo->width / 7 ,
             imageInfo->height,
             imageInfo->hMemDC,
-            imageInfo->width / 9 * frameIndex, 0,
+            imageInfo->width / 7 * frameIndex, 0,
+            SRCCOPY
+        );
+    }
+}
+
+void Image::RenderByYInd(HDC hdc, int destX, int destY, int frameIndex, int actionFrameIndex, bool isFlip)
+{
+    imageInfo->currFrameX = frameIndex;
+    imageInfo->currFrameY = actionFrameIndex;
+
+
+    if (isFlip && isTransparent)
+    {
+        StretchBlt(imageInfo->hTempDC, 0, 0,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+            imageInfo->hMemDC,
+            (imageInfo->frameWidth * imageInfo->currFrameX) + (imageInfo->frameWidth - 1),
+            imageInfo->frameHeight * imageInfo->currFrameY,
+            -imageInfo->frameWidth, imageInfo->frameHeight,
+            SRCCOPY
+        );
+
+        GdiTransparentBlt(hdc,
+            destX, destY,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+
+            imageInfo->hTempDC,
+            0, 0,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+            transColor);
+    }
+    else if (isTransparent)
+    {
+        GdiTransparentBlt(hdc,
+            destX, destY,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+
+            imageInfo->hMemDC,
+            imageInfo->frameWidth * imageInfo->currFrameX,
+            imageInfo->frameHeight * imageInfo->currFrameY,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+            transColor);
+    }
+    else
+    {
+        BitBlt(
+            hdc,
+            destX, destY,
+            imageInfo->width / 7,
+            imageInfo->height,
+            imageInfo->hMemDC,
+            imageInfo->width / 7 * frameIndex, 0,
             SRCCOPY
         );
     }

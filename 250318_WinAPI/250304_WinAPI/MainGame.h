@@ -3,7 +3,7 @@
 
 class GameManager;
 class Image;
-class KOF_Iori;
+class KOF_Character;
 class MainGame : public GameObject
 {
 private:
@@ -16,7 +16,7 @@ private:
 
 	Image* backBuffer;
 	Image* backGround;
-	KOF_Iori* iori;
+	KOF_Character* mai;
 
 	GameManager* gameManager;
 
