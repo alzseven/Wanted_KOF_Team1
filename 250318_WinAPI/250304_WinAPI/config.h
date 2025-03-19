@@ -18,12 +18,30 @@ using namespace std;
 #define WINSIZE_Y	500
 #define DEG_TO_RAD(degree) ((3.14 / 180.0) * degree)
 #define RAD_TO_DEG(radian) ((180.0 / 3.14) * radian)
+#define RESET 0
 
 typedef struct tagFPOINT
 {
 	float x;
 	float y;
 } FPOINT;
+
+/* 전투 정보를 담는 구조체 */
+typedef struct combatInfo
+{
+	RECT hitRect = {0,0,0,0};
+	RECT atackRect = {0,0,0,0};
+	int damage = 0;
+
+} COMBATINFO;
+
+/* UI 정보를 담는 구조체 */
+typedef struct uiInfo
+{
+	string name;
+	int health;
+} UIINFO;
+
 
 /*
 	extern 키워드 : 변수나 함수가 다른 파일에 정의되어 있다 라는

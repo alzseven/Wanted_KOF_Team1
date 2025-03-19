@@ -1,8 +1,9 @@
 #include "KOF_Character.h"
 #include "Image.h"
 #include "KOF_CharacterState.h"
+#include "CommonFunction.h"
 
-void KOF_Character::Init()
+void KOF_Character::Init(/*캐릭터 이름, 캐릭터 데미지 등 인자로 받아서 초기화 해줘야 함*/)
 {
 	health = 100;
 	weakPunchDamage = 10;
@@ -15,9 +16,13 @@ void KOF_Character::Init()
 	//hitRect;
 	//attackRect;
 	currentFrameIndex = 0;
-	currentActionIndex = 0;
+	currentActionState = 0;
 	elaspedFrame = 0.0f;
 	
+	// 임시
+	combatInfo = { {0,0,0,0}, {0,0,0,0}, 0};
+	uiInfo = {"Mai", 100};
+
 	/*	image = new Image();
 	if (FAILED(image->Init(TEXT("Image/Mai_Shiranui/Mai.bmp"), 1455, 627, 15, 5,
 		true, RGB(255, 255, 255))))
@@ -67,39 +72,48 @@ void KOF_Character::Release()
 
 void KOF_Character::Update()
 {
-	
-	float frameSpeed = 10.0f;
+
+	// Update combatInfo
+	// 임시 하드코딩
+	combatInfo = { {static_cast<int>(Pos.x), static_cast<int>(Pos.y), 77, 94}, 
+					{static_cast<int>(Pos.x),static_cast<int>(Pos.y + 97), 30,94},
+					20 };
+
+	// Update uiInfo
+	// 임시
+	uiInfo = { characterName, health};
+
+
+	float frameSpeed = 20.0f;
 
 	elaspedFrame += frameSpeed;
-
 
 	if (elaspedFrame >= 100.0f)
 	{
 		currentFrameIndex++;
 
-		elaspedFrame = 0.0f;
+		elaspedFrame = RESET;
 	}
 	
-
-	if (currentFrameIndex >= 15 && currentActionIndex == State::Idle)
+	if (currentFrameIndex >= 15 && currentActionState == static_cast<int>(State::Idle))
 	{
-		currentFrameIndex = 0;
+		currentFrameIndex = RESET;
 	}
 
-	switch (currentActionIndex)
+	switch (currentActionState)
 	{
-	case State::StrongPunch:
+	case static_cast<int>(State::StrongPunch):
 		if (currentFrameIndex >= 6)
 		{
-			currentFrameIndex = 0;
-			currentActionIndex = 0;
+			currentFrameIndex = RESET;
+			currentActionState = static_cast<int>(State::Idle);
 		}
 		break;
-	case State::StrongKick:
+	case static_cast<int>(State::StrongKick):
 		if (currentFrameIndex >= 7)
 		{
-			currentFrameIndex = 0;
-			currentActionIndex = 0;
+			currentFrameIndex = RESET;
+			currentActionState = static_cast<int>(State::Idle);
 		}
 		break;
 	}
@@ -108,21 +122,21 @@ void KOF_Character::Update()
 	// D key : 앞이동
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
 	{
-		currentFrameIndex = 0;
-		currentActionIndex = State::MovingFoward;
+		currentFrameIndex = RESET;
+		currentActionState = static_cast<int>(State::MovingFoward);
 	}
 	if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 	{
 		Pos.x += 2.0f * (frameSpeed / moveSpeed);
 		if (currentFrameIndex >= 6)
 		{
-			currentFrameIndex = 0;
+			currentFrameIndex = RESET;
 		}
 	}
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
 	{
-		currentFrameIndex = 0;
-		currentActionIndex = State::Idle;
+		currentFrameIndex = RESET;
+		currentActionState = static_cast<int>(State::Idle);
 	}
 
 
@@ -130,7 +144,7 @@ void KOF_Character::Update()
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x41))
 	{
 		currentFrameIndex = 0;
-		currentActionIndex = State::MovingBack;
+		currentActionState = static_cast<int>(State::MovingBack);
 	}
 	if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
 	{
@@ -138,16 +152,14 @@ void KOF_Character::Update()
 
 		if (currentFrameIndex >= 6)
 		{
-			currentFrameIndex = 0;
+			currentFrameIndex = RESET;
 		}
 	}
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 	{
-		currentFrameIndex = 0;
-		currentActionIndex = State::Idle;
+		currentFrameIndex = RESET;
+		currentActionState = static_cast<int>(State::Idle);
 	}
-	
-
 
 	// J key : 강펀치
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4A))
@@ -167,10 +179,22 @@ void KOF_Character::Update()
 
 void KOF_Character::Render(HDC hdc)
 {
+	// 히트박스 확인용
+	//if (currentActionState == static_cast<int>(State::Idle))
+		RenderRect(hdc, Pos.x + 27, Pos.y, 38, 94);
+
 	if (image)
-		image[currentActionIndex].Render(hdc,Pos.x,Pos.y,currentFrameIndex,false);
+		image[currentActionState].Render(hdc,Pos.x,Pos.y,currentFrameIndex,false);
+
+	// 히트박스 확인용
+	if (currentActionState == static_cast<int>(State::StrongKick))
+		RenderRect(hdc, Pos.x + 107, Pos.y, 25, 94);
+	 
+	if (currentActionState == static_cast<int>(State::StrongPunch))
+		RenderRect(hdc, Pos.x + 97, Pos.y, 20, 94);
 
 }
+
 
 void KOF_Character::WeakPunch()
 {
@@ -179,10 +203,10 @@ void KOF_Character::WeakPunch()
 
 void KOF_Character::StrongPunch()
 {
-	if (currentActionIndex == State::StrongPunch) return;
-	currentFrameIndex = 0;
-	currentActionIndex = State::StrongPunch;
-	elaspedFrame = 0.0f;
+	if (currentActionState == static_cast<int>(State::StrongPunch)) return;
+	currentFrameIndex = RESET;
+	currentActionState = static_cast<int>(State::StrongPunch);
+	elaspedFrame = RESET;
 }
 
 
@@ -193,10 +217,10 @@ void KOF_Character::WeakKick()
 
 void KOF_Character::StrongKick()
 {
-	if (currentActionIndex == State::StrongKick) return;
-	currentFrameIndex = 0;
-	currentActionIndex = State::StrongKick;
-	elaspedFrame = 0.0f;
+	if (currentActionState == static_cast<int>(State::StrongKick)) return;
+	currentFrameIndex = RESET;
+	currentActionState = static_cast<int>(State::StrongKick);
+	elaspedFrame = RESET;
 }
 
 bool KOF_Character::Guard(bool)
@@ -204,3 +228,13 @@ bool KOF_Character::Guard(bool)
 	return true;
 }
 
+
+COMBATINFO KOF_Character::GetCombatInfo()
+{
+	return combatInfo;
+}
+
+UIINFO KOF_Character::GetUIInfo()
+{
+	return uiInfo;
+}

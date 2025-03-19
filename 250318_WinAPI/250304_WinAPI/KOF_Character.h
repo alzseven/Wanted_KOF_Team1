@@ -19,14 +19,14 @@ private:
 	RECT hitRect;
 	RECT attackRect;
 
+	COMBATINFO combatInfo;
+	UIINFO uiInfo;
+
 	Image* image;
 	int currentFrameIndex;
-	int currentActionIndex;
+	// 현재 캐릭터의 상태 저장
+	int currentActionState;
 	float elaspedFrame;
-
-
-	
-
 
 public:
 
@@ -40,6 +40,11 @@ public:
 	void Release();
 	void Update();
 	void Render(HDC hdc);
+
+	COMBATINFO GetCombatInfo();
+	UIINFO GetUIInfo();
+
+
 
 };
 
