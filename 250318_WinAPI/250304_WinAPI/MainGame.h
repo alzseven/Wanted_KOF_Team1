@@ -21,7 +21,7 @@ private:
 	KOF_Iori* iori;
 	//KOF_Athena_Asamiya* Asamiya;
 	UI* GameUI;
-	KOF_Character* hostile;		//상대할 캐릭터
+	KOF_Character* myCharacter;		//상대할 캐릭터
 
 public:
 	void Init();	// override (부모클래스와 같은 함수이름, 로직을 다르게 구현하고 싶을 때)

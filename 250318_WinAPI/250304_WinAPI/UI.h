@@ -10,9 +10,8 @@ private:
 	int HealthForUpdate;				//체력 업데이트용 변수
 	int boxHeight;
 	POINT boxPos;
+	int percentage;
 public:
-	void displayHealth(HDC hdc, int characterHealth);									//체력
-	void displayHealth_BoxOutline(HDC hdc, int characterHealth);						//체력바
 	void displayPortrait(HDC hdc, KOF_Character* targetCharacter);						//캐릭터 초상화
 	bool winner(HDC hdc);																//승자
 
@@ -23,8 +22,8 @@ public:
 	void Init(KOF_Character* targetCharacter);
 	UI();
 	~UI();
-	void Update();
-	void Render(HDC hdc);					//체력 렌더링
+	void Render_Update_HealthBar(HDC hdc, KOF_Character* targetCharacter);
+	void Render_HealthBar(HDC hdc);					//체력 렌더링
 	void RenderBoxOutline(HDC hdc);			//체력바 렌더링
 };
 

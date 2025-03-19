@@ -2,18 +2,9 @@
 #include "KOF_Character.h"
 #include "CommonFunction.h"
 
-void UI::displayHealth(HDC hdc, int characterHealth)
-{
-	RenderRect(hdc, 10, 10, characterHealth, 15);
-}
-
-void UI::displayHealth_BoxOutline(HDC hdc, int characterHealth)
-{
-	RenderRect(hdc, 10, 10, characterHealth, 15);
-}
-
 void UI::displayPortrait(HDC hdc, KOF_Character* targetCharacter)
 {
+
 }
 
 bool UI::winner(HDC hdc)
@@ -36,8 +27,8 @@ void UI::Init(KOF_Character* targetCharacter)
 	/*updateCharacterHealth(targetCharacter);
 	updateBoxWidth(targetCharacter);*/
 
-	HealthForUpdate = 400;
-	healthForBoxWidth = 400;
+	HealthForUpdate = 400;				//남은 체력에 비례해서 조절해야함
+	healthForBoxWidth = 400;			//수식을 모르겠어서 일단 400으로 설정함
 	boxPos.x = 10;
 	boxPos.y = 15;
 	boxHeight = 30;
@@ -53,17 +44,23 @@ UI::~UI()
 
 }
 
-void UI::Update()
+void UI::Render_Update_HealthBar(HDC hdc, KOF_Character* targetCharacter)
 {
-	
+	percentage = 100 - targetCharacter->getHealth();
+
 }
 
-void UI::Render(HDC hdc)
+void UI::Render_HealthBar(HDC hdc)
 {
-	RenderRect(hdc, boxPos.x, boxPos.y, 250, boxHeight);
+	HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));		//KOF_03 원판과 유사하게 초록색으로 설정함
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+	RenderRect(hdc, boxPos.x + percentage, boxPos.y, healthForBoxWidth - percentage, boxHeight);
+	SelectObject(hdc, hOldBrush);
+	DeleteObject(hBrush);
 }
 
 void UI::RenderBoxOutline(HDC hdc)
 {
 	RenderRect(hdc, boxPos.x, boxPos.y, healthForBoxWidth,boxHeight);
 }
+

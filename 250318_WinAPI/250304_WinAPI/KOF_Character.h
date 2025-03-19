@@ -16,7 +16,7 @@ class KOF_Character : public GameObject
 	FPOINT Pos;
 	RECT hitRect;
 	RECT attackRect;
-	Image* image;
+	Image* portrait;
 	int currentFrameIndex;
 public:
 	void WeakPunch();
@@ -36,4 +36,6 @@ public:
 
 	KOF_Character();
 	~KOF_Character();
+
+	void SetHealth(int newHealth) { health = newHealth; }
 };

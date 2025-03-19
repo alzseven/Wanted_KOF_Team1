@@ -29,11 +29,11 @@ void MainGame::Init()
 	/*iori = new KOF_Iori();
 	iori->Init();*/
 
-	hostile = new KOF_Character();		//상대 플레이어 업데이트
-	hostile->Init();
+	myCharacter = new KOF_Character();		//상대 플레이어 업데이트
+	myCharacter->Init();
 
 	GameUI = new UI();
-	GameUI->Init(hostile);
+	GameUI->Init(myCharacter);
 }
 
 void MainGame::Release()
@@ -75,7 +75,8 @@ void MainGame::Update()
 	
 	if (GameUI)
 	{
-		GameUI->Update();
+		myCharacter->SetHealth(myCharacter->getHealth() - 1);
+		GameUI->Render_Update_HealthBar(hdc, myCharacter);
 	}
 
 	InvalidateRect(g_hWnd, NULL, false);
@@ -90,7 +91,7 @@ void MainGame::Render(HDC hdc)
 	//iori->Render(hBackBufferDC);
 
 	GameUI->RenderBoxOutline(hBackBufferDC);
-	GameUI->Render(hBackBufferDC);
+	GameUI->Render_HealthBar(hBackBufferDC);
 
 	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
 	TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
