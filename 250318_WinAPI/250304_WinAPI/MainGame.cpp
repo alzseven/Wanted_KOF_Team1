@@ -1,8 +1,10 @@
 #include "MainGame.h"
 #include "CommonFunction.h"
 #include "Image.h"
+#include "UI.h"
+#include "KOF_Character.h"
+
 //#include "KOF_Iori.h"
-#include "KOF_Athena_Asamiya.h"
 
 /*
 	실습1. 이오리 집에 보내기
@@ -27,8 +29,11 @@ void MainGame::Init()
 	/*iori = new KOF_Iori();
 	iori->Init();*/
 
-	Asamiya = new KOF_Athena_Asamiya();
-	Asamiya->Init();
+	hostile = new KOF_Character();		//상대 플레이어 업데이트
+	hostile->Init();
+
+	GameUI = new UI();
+	GameUI->Init(hostile);
 }
 
 void MainGame::Release()
@@ -40,12 +45,13 @@ void MainGame::Release()
 		iori = nullptr;
 	}*/
 
-	if (Asamiya)
+	if (GameUI)
 	{
-		Asamiya->Release();
-		delete Asamiya;
-		Asamiya = nullptr;
+		GameUI->Release();
+		delete GameUI;
+		GameUI = nullptr;
 	}
+
 
 	if (backGround)
 	{
@@ -66,9 +72,11 @@ void MainGame::Update()
 {
 	/*if (iori)
 		iori->Update();*/
-
-	if (Asamiya)
-		Asamiya->Update();
+	
+	if (GameUI)
+	{
+		GameUI->Update();
+	}
 
 	InvalidateRect(g_hWnd, NULL, false);
 }
@@ -80,7 +88,9 @@ void MainGame::Render(HDC hdc)
 
 	backGround->Render(hBackBufferDC);
 	//iori->Render(hBackBufferDC);
-	Asamiya->Render(hBackBufferDC);
+
+	GameUI->RenderBoxOutline(hBackBufferDC);
+	GameUI->Render(hBackBufferDC);
 
 	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
 	TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
@@ -102,7 +112,7 @@ LRESULT MainGame::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
-		{
+		{/*
 		case VK_LEFT:
 			Asamiya->Move(-(Asamiya->getMoveSpeed()), 0);
 			break;
@@ -123,7 +133,7 @@ LRESULT MainGame::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 			break;
 		case 'x': case 'X':
 			Asamiya->StrongKick();
-			break;
+			break;*/
 		}
 		break;
 	case WM_LBUTTONDOWN:
