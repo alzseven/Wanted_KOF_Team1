@@ -31,6 +31,8 @@ public:
 
 	bool Guard(bool isSuccess);
 
+	inline combatInfo* CombatInfo() { return combat;}
+
 	void Init();		// ³ª
 	void Release();		// ³ª
 	void Update();
