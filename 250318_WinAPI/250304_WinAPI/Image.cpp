@@ -175,10 +175,10 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
         BitBlt(
             hdc,
             destX, destY,
-            imageInfo->width / 9,
+            imageInfo->width / imageInfo->maxFrameX,
             imageInfo->height,
             imageInfo->hMemDC,
-            imageInfo->width / 9 * frameIndex, 0,
+            imageInfo->width / imageInfo->maxFrameX * frameIndex, 0,
             SRCCOPY
         );
     }
