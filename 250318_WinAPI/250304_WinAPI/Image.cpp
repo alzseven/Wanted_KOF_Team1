@@ -1,5 +1,7 @@
 #include "Image.h"
 
+#include "CommonFunction.h"
+
 HRESULT Image::Init(int width, int height)
 {
     HDC hdc = GetDC(g_hWnd);
@@ -136,6 +138,8 @@ void Image::Render(HDC hdc, int destX, int destY)
 
 void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
 {
+    // RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
+    
     imageInfo->currFrameX = frameIndex;
 
     if (isFlip && isTransparent)
@@ -182,6 +186,7 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
             SRCCOPY
         );
     }
+
 }
 
 void Image::Release()
