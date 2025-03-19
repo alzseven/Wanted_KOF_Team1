@@ -24,7 +24,7 @@ void MainGame::Release()
 void MainGame::Update()
 {
 	gameManager->Update();
-	InvalidateRect(g_hWnd, NULL, false);
+	InvalidateRect(g_hWnd, NULL, true);
 }
 
 void MainGame::Render(HDC hdc)
