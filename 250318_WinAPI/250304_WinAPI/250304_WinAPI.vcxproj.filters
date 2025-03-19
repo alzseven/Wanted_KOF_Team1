@@ -74,5 +74,8 @@
     <ClInclude Include="KOF_Character.h">
       <Filter>MainGame\KOF_Character</Filter>
     </ClInclude>
+    <ClInclude Include="KOF_CharacterState.h">
+      <Filter>MainGame\KOF_Character</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

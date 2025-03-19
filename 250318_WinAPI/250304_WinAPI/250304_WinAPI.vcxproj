@@ -142,6 +142,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="KeyManager.h" />
     <ClInclude Include="KOF_Character.h" />
+    <ClInclude Include="KOF_CharacterState.h" />
     <ClInclude Include="KOF_Iori.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Singleton.h" />

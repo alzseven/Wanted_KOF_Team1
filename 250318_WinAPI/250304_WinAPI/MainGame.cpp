@@ -1,7 +1,7 @@
 #include "MainGame.h"
 #include "CommonFunction.h"
 #include "Image.h"
-#include "KOF_Iori.h"
+#include "KOF_Character.h"
 
 void MainGame::Init()
 {
@@ -18,17 +18,18 @@ void MainGame::Init()
 			TEXT("Image/backGround.bmp 생성 실패"), TEXT("경고"), MB_OK);
 	}
 
-	iori = new KOF_Iori();
-	iori->Init();
+
+	mai = new KOF_Character();
+	mai->Init();
 }
 
 void MainGame::Release()
 {
-	if (iori)
+	if (mai)
 	{
-		iori->Release();
-		delete iori;
-		iori = nullptr;
+		mai->Release();
+		delete mai;
+		mai = nullptr;
 	}
 
 	if (backGround)
@@ -48,8 +49,8 @@ void MainGame::Release()
 
 void MainGame::Update()
 {
-	if (iori)
-		iori->Update();
+	if (mai)
+		mai->Update();
 
 	InvalidateRect(g_hWnd, NULL, false);
 }
@@ -60,10 +61,10 @@ void MainGame::Render(HDC hdc)
 	HDC hBackBufferDC = backBuffer->GetMemDC();
 
 	backGround->Render(hBackBufferDC);
-	iori->Render(hBackBufferDC);
+	mai->Render(hBackBufferDC);
 
-	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
-	TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
+	//wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
+	//TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
 
 	// 백버퍼에 있는 내용을 메인 hdc에 복사
 	backBuffer->Render(hdc);
@@ -83,10 +84,6 @@ LRESULT MainGame::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
-		case 'a': case 'A':
-			break;
-		case 'd': case 'D':
-			break;
 		}
 		break;
 	case WM_LBUTTONDOWN:

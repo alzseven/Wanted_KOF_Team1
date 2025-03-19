@@ -21,6 +21,12 @@ private:
 
 	Image* image;
 	int currentFrameIndex;
+	int currentActionIndex;
+	float elaspedFrame;
+
+
+	
+
 
 public:
 
@@ -33,10 +39,7 @@ public:
 	void Init();
 	void Release();
 	void Update();
-	void Render(HDC);
-
-
-
+	void Render(HDC hdc);
 
 };
 
