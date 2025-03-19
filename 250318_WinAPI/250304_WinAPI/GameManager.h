@@ -18,6 +18,7 @@ public:
     void Init();
     void Release();
     void Update();
+    void CheckCollisions();
     void Render(HDC hdc);
     
 };

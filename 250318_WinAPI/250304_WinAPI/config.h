@@ -31,3 +31,34 @@ typedef struct tagFPOINT
 */
 extern HWND g_hWnd;
 extern HINSTANCE g_hInstance;
+
+
+typedef struct combatInfo
+{
+	RECT hitRect;
+	int damage = 0;
+
+} COMBATINFO;
+
+struct SpriteSheetInfo
+{
+	string sheetName;
+	const wchar_t* filename;
+	int width;
+	int height;
+	int maxFrameX;
+	int maxFrameY;
+	bool isTransparent;
+	COLORREF transColor;
+};
+
+struct CharacterInfo
+{
+	int health;
+	int weakPunchDamage;
+	int weakKickDamage;
+	int strongPunchDamage;
+	int strongKickDamage;
+	string characterName;
+	SpriteSheetInfo* spriteSheet;
+};
