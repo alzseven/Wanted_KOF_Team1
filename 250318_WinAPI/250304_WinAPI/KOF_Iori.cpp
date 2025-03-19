@@ -63,7 +63,7 @@ void KOF_Iori::Render(HDC hdc)
 
 void KOF_Iori::Move()
 {
-	pos.x += moveSpeed;
+	// pos.x += moveSpeed;
 }
 
 KOF_Iori::KOF_Iori()

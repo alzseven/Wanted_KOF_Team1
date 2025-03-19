@@ -24,8 +24,8 @@ void MainGame::Init()
 			TEXT("Image/backGround.bmp 생성 실패"), TEXT("경고"), MB_OK);
 	}
 
-	iori = new KOF_Iori();
-	iori->Init();
+	//iori = new KOF_Iori();
+	//iori->Init();
 
 	// test
 	king = new KOF_Character();
@@ -42,12 +42,12 @@ void MainGame::Release()
 		king = nullptr;
 	}
 
-	if (iori)
-	{
-		iori->Release();
-		delete iori;
-		iori = nullptr;
-	}
+	//if (iori)
+	//{
+	//	iori->Release();
+	//	delete iori;
+	//	iori = nullptr;
+	//}
 
 	if (backGround)
 	{
@@ -66,11 +66,12 @@ void MainGame::Release()
 
 void MainGame::Update()
 {
+	// test
 	if (king)
 		king->Update();
 
-	if (iori)
-		iori->Update();
+	//if (iori)
+	//	iori->Update();
 
 	InvalidateRect(g_hWnd, NULL, false);
 }
@@ -81,8 +82,9 @@ void MainGame::Render(HDC hdc)
 	HDC hBackBufferDC = backBuffer->GetMemDC();
 
 	backGround->Render(hBackBufferDC);
-	iori->Render(hBackBufferDC);
+	//iori->Render(hBackBufferDC);
 
+	// test
 	king->Render(hBackBufferDC);
 
 	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
