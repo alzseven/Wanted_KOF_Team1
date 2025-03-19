@@ -6,8 +6,8 @@
 // »õ·Î ¸¸µê
 void KOF_Character::WeakPunch()
 {
-	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });		
-	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });	
+	//UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });		
+	//UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });	
 
 	combat->damage = weakKickDamage;
 
@@ -219,6 +219,8 @@ void KOF_Character::Update()
 		{
 			currentFrameIndex = 0;
 		}
+		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+
 	}
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
 	{
@@ -241,6 +243,7 @@ void KOF_Character::Update()
 		{
 			currentFrameIndex = 0;
 		}
+		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
 	}
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 	{
@@ -266,6 +269,8 @@ void KOF_Character::Update()
 	// U key : ¾àÆÝÄ¡
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x55))
 	{
+		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+		UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });
 		WeakPunch();
 	}
 	// I key : °­ÆÝÄ¡
