@@ -86,5 +86,7 @@ public:
 		}
 		return NULL;
 	}
+
+	inline int GetMaxFrameX() { return imageInfo->maxFrameX; }
 };
 
