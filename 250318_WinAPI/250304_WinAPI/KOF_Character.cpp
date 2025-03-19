@@ -168,7 +168,7 @@ void KOF_Character::Update()
 	}
 
 
-	if (currentFrameIndex >= 15 && currentActionIndex == State::Idle)
+	if (currentFrameIndex >= 5 && currentActionIndex == State::Idle)
 	{
 		currentFrameIndex = 0;
 	}
@@ -183,7 +183,21 @@ void KOF_Character::Update()
 		}
 		break;
 	case State::StrongKick:
-		if (currentFrameIndex >= 7)
+		if (currentFrameIndex >= 10)
+		{
+			currentFrameIndex = 0;
+			currentActionIndex = 0;
+		}
+		break;
+	case State::WeakPunch:
+		if (currentFrameIndex >= 5)
+		{
+			currentFrameIndex = 0;
+			currentActionIndex = 0;
+		}
+		break;
+	case State::WeakKick:
+		if (currentFrameIndex >= 5)
 		{
 			currentFrameIndex = 0;
 			currentActionIndex = 0;
@@ -201,7 +215,7 @@ void KOF_Character::Update()
 	if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 	{
 		Pos.x += 2.0f * (frameSpeed / moveSpeed);
-		if (currentFrameIndex >= 6)
+		if (currentFrameIndex >= 5)
 		{
 			currentFrameIndex = 0;
 		}
@@ -223,7 +237,7 @@ void KOF_Character::Update()
 	{
 		Pos.x -= 2.0f * (frameSpeed / moveSpeed);
 
-		if (currentFrameIndex >= 6)
+		if (currentFrameIndex >= 5)
 		{
 			currentFrameIndex = 0;
 		}
