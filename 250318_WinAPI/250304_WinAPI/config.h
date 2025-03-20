@@ -9,6 +9,7 @@
 
 #include "KeyManager.h"
 
+enum class EAttackHeightType;
 using namespace std;
 
 /*
@@ -38,6 +39,7 @@ extern HINSTANCE g_hInstance;
 /* 전투 정보를 담는 구조체 */
 typedef struct combatInfo
 {
+	EAttackHeightType attackHeightType;
 	RECT hitRect;
 	int damage = 0;
 

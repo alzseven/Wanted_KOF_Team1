@@ -1,7 +1,15 @@
 #pragma once
 #include "CommonFunction.h"
 #include "GameObject.h"
+// #include "KOF_CharacterFiniteStateMachineState.h"
+// #include "KOF_CharacterFiniteStateMachineState.h"
+// #include "KOF_CharacterState.h"
 
+enum class EFiniteStateMachineState;
+class KOF_CharacterStateGuard;
+class KOF_CharacterStateAttack;
+class KOF_CharacterStateMove;
+class KOF_CharacterStateIdle;
 class KOF_CharacterFiniteStateMachineState;
 class KOF_CharacterFiniteStateMachine;
 class Image;
@@ -38,8 +46,15 @@ private:
     bool isFlip;
 
     KOF_CharacterFiniteStateMachine* fsm;
-    KOF_CharacterFiniteStateMachineState* states;
+    KOF_CharacterFiniteStateMachineState** states;
 
+    EFiniteStateMachineState currentMachinState;
+    KOF_CharacterStateIdle *idleState;
+    KOF_CharacterStateMove *moveState;
+    KOF_CharacterStateAttack *attackState;
+    KOF_CharacterStateGuard *guardState;
+    
+    
 public:
     void WeakPunch();
     void StrongPunch();
@@ -57,6 +72,7 @@ public:
     int GetHealth();
     RECT GetHitRect();
     RECT GetAttackRect();
+    void CheckAttack();
 
     //TODO:
     inline COMBATINFO GetCurrentAttack(){ return this->currentCombatInfo;}
@@ -71,6 +87,8 @@ public:
         UpdateRect(attackRect, pos);
     }
     bool GetIsFlip() const { return this->isFlip;}
+    inline FPOINT GetPos() const { return this->pos;}
+    void SetStateToIdle();
 };
 
 

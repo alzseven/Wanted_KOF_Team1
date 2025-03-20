@@ -15,40 +15,61 @@ void GameManager::Init()
     // Character Init
     // TODO: Set random two characters how?
     CharacterInfo charinfo = CharacterInfo{
-        100, 5, 7, 10, 14,
-        "Mai", new SpriteSheetInfo[10]{
+        100,
+        5,
+        7,
+        10,
+        14,
+        "Mai",
+        new SpriteSheetInfo[10]{
             SpriteSheetInfo{
                 "Mai_Idle",
-            TEXT("Image/Mai_Shiranui/Mai_Idle.bmp"),
-            1455,114,15,1,true,RGB(255,255,255)
-        },
+                TEXT("Image/Mai_Shiranui/Mai_Idle.bmp"),
+                1455, 114, 15, 1, true,RGB(255, 255, 255)
+            },
             SpriteSheetInfo{
                 "Mai_Foward",
-            TEXT("Image/Mai_Shiranui/Mai_Foward.bmp"),
-            648, 124, 6, 1,true,RGB(255,255,255)
-        },  SpriteSheetInfo{
+                TEXT("Image/Mai_Shiranui/Mai_Foward.bmp"),
+                648, 124, 6, 1, true,RGB(255, 255, 255)
+            },
+            SpriteSheetInfo{
                 "Mai_Back",
-            TEXT("Image/Mai_Shiranui/Mai_Back.bmp"),
-            552, 121, 6, 1,true,RGB(255,255,255)
-        },
+                TEXT("Image/Mai_Shiranui/Mai_Back.bmp"),
+                552, 121, 6, 1, true,RGB(255, 255, 255)
+            },
             SpriteSheetInfo{
                 "Mai_StrongPunch",
-            TEXT("Image/Mai_Shiranui/Mai_StrongPunch.bmp"),
-            773, 135, 6, 1,true,RGB(255,255,255)
-        },
+                TEXT("Image/Mai_Shiranui/Mai_StrongPunch.bmp"),
+                773, 135, 6, 1, true,RGB(255, 255, 255)
+            },
             SpriteSheetInfo{
                 "Mai_StrongKick",
-            TEXT("Image/Mai_Shiranui/Mai_StrongKick.bmp"),
-            979, 133, 7, 1,true,RGB(255,255,255)
-        }
+                TEXT("Image/Mai_Shiranui/Mai_StrongKick.bmp"),
+                979, 133, 7, 1, true,RGB(255, 255, 255)
+            },
+            SpriteSheetInfo{
+                "Mai_StrongPunch",
+                TEXT("Image/Mai_Shiranui/Mai_StrongPunch.bmp"),
+                773, 135, 6, 1, true,RGB(255, 255, 255)
+            },
+            SpriteSheetInfo{
+                "Mai_StrongKick",
+                TEXT("Image/Mai_Shiranui/Mai_StrongKick.bmp"),
+                979, 133, 7, 1, true,RGB(255, 255, 255)
+            },
+            SpriteSheetInfo{
+                "Mai_Idle",
+                TEXT("Image/Mai_Shiranui/Mai_Idle.bmp"),
+                1455, 114, 15, 1, true,RGB(255, 255, 255)
+            },
 
         }
     };
-    
+
     character1 = new KOF_Character();
     character1->Init(charinfo, true, false);
     character1->SetPos({200, 300});
-    
+
     // character2 = new KOF_Character();
     // character2->Init(charinfo, true, true);
     // character2->SetPos({700, 300});
@@ -77,7 +98,6 @@ void GameManager::Release()
     // delete character1;
     // character2->Release();
     // delete character2;
-
 }
 
 void GameManager::Update()
@@ -90,13 +110,13 @@ void GameManager::Update()
     // }
     // else
     // {
-        background->Update();
-        
-        character1->Update();
-        // character2->Update();
+    background->Update();
 
-        // character1UI->Update();
-        // character2UI->Update();
+    character1->Update();
+    // character2->Update();
+
+    // character1UI->Update();
+    // character2UI->Update();
     // }
 
     // Handle Collision
