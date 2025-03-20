@@ -29,15 +29,15 @@ void MainGame::Init()
 	/*iori = new KOF_Iori();
 	iori->Init();*/
 
-	myCharacter = new KOF_Character();		//자신의 플레이어 업데이트
-	myCharacter->Init();
-	hostileCharacter = new KOF_Character();	//상대 플레이어
-	hostileCharacter->Init();
+	//myCharacter = new KOF_Character();		//자신의 플레이어 업데이트
+	//myCharacter->Init();
+	//hostileCharacter = new KOF_Character();	//상대 플레이어
+	//hostileCharacter->Init();
 
 	GameUI = new UI();
-	GameUI->Init(myCharacter);
+	GameUI->Init_myCharacter();
 	GameUI_Hostile = new UI();
-	GameUI_Hostile->Init_hostile(hostileCharacter);
+	GameUI_Hostile->Init_hostile();
 }
 
 void MainGame::Release()
@@ -85,16 +85,14 @@ void MainGame::Update()
 	
 	if (GameUI)
 	{
-		myCharacter->SetHealth(myCharacter->getCurrentHealth() - 10);	//상수(10)는 체력을 깔 데미지
-		GameUI->Update_HealthBar(myCharacter);
+		GameUI->Update();
 	}
 
 	if (GameUI_Hostile)
 	{
-		hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 0.01f);
-		GameUI_Hostile->Update_HealthBar(hostileCharacter);
+		GameUI_Hostile->Update();
 	}
-
+	
 	InvalidateRect(g_hWnd, NULL, false);
 }
 

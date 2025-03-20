@@ -22,27 +22,39 @@ void UI::winner(HDC hdc, bool isWin)
 //	healthForBoxWidth = targetCharacter->getCurrentHealth();
 //}
 
-void UI::Init(KOF_Character* targetCharacter)
+void UI::Init_myCharacter()
 {
 	/*updateCharacterHealth(targetCharacter);
 	updateBoxWidth(targetCharacter);*/
 
-	HealthForUpdate = 400;				//남은 체력에 비례해서 조절해야함
-	healthForBoxWidth = 400;			//수식을 모르겠어서 일단 400으로 설정함
+	HealthForUpdate = myCharacter->getCurrentHealth();				//남은 체력에 비례해서 조절해야함
+	healthForBoxWidth = myCharacter->getMaxHealth();			//수식을 모르겠어서 일단 400으로 설정함
 	boxPos.x = 50;
 	boxPos.y = 15;
 	boxHeight = 30;
 	percentage = 0;
 }
 
-void UI::Init_hostile(KOF_Character* targetCharacter)
+void UI::Init_hostile()
 {
-	HealthForUpdate = 400;
-	healthForBoxWidth = 400;
+	HealthForUpdate = hostileCharacter->getCurrentHealth();
+	healthForBoxWidth = hostileCharacter->getMaxHealth();
 	boxPos.x = WINSIZE_X - 50 - healthForBoxWidth;
 	boxPos.y = 15;
 	boxHeight = 30;
 	percentage = 0;
+}
+
+void UI::Update()
+{
+	myCharacter->SetHealth(myCharacter->getCurrentHealth() - 10);	//상수(10)는 체력을 깔 데미지
+	Update_HealthBar(myCharacter);
+}
+
+void UI::Update_hostile()
+{
+	hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 0.01f);
+	Update_HealthBar(hostileCharacter);
 }
 
 UI::UI()

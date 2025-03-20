@@ -11,6 +11,8 @@ private:
 	int boxHeight;
 	POINT boxPos;
 	float percentage;
+	KOF_Character* myCharacter;
+	KOF_Character* hostileCharacter;
 public:
 	void displayPortrait(HDC hdc, KOF_Character* targetCharacter);						//캐릭터 초상화
 	void winner(HDC hdc, bool isWin);																//승자
@@ -20,8 +22,10 @@ public:
 	inline int getTargetCharacterHealth() const { return HealthForUpdate; }	//캐릭터 체력 가져오기
 	inline int getPercentage() const { return percentage; }
 
-	void Init(KOF_Character* targetCharacter);
-	void Init_hostile(KOF_Character* targetCharacter);
+	void Init_myCharacter();
+	void Init_hostile();
+	void Update();
+	void Update_hostile();
 	UI();
 	~UI();
 	void Update_HealthBar(KOF_Character* targetCharacter);
