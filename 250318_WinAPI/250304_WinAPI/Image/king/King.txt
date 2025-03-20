@@ -1,11 +1,13 @@
 color 224, 0, 237
 FrameSize 130*130px
 
+*hitRect left 0, top 0, right 30, bottom 110
+
 State				Frame(X)	HitOffset(x, y)		AttackOffset
-Idle				5
-MovingForward		5
-MovingBackward		5
-StrongPunch		13
-StrongKick			10
-WeakPunch			5
-WeakKick			9
+Idle				5		30.0f, 75.0f			X
+MovingForward		5		30.5f, 75.0f			X
+MovingBackward		5		30.5f, 75.0f			X
+StrongPunch		13		53.0f, 75.0f			60.0f, 10.0f
+StrongKick			10		47.0f, 75.0f			115.0f, 30.0f
+WeakPunch			5		48.0f, 75.0f			95.0f, 40.0f
+WeakKick			9		48.5f, 75.0f			100.0f, 95.0f
