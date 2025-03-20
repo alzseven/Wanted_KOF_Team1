@@ -134,7 +134,7 @@ void Image::Render(HDC hdc, int destX, int destY)
     }
 }
 
-void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
+void Image::Render(HDC hdc, int destX, int destY, int frameIndex, float cameraX, bool isFlip)
 {
     imageInfo->currFrameX = frameIndex;
 
@@ -178,7 +178,7 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
             imageInfo->width,
             imageInfo->height / 14,
             imageInfo->hMemDC,
-            0, imageInfo->height / 14 * frameIndex,
+            cameraX, imageInfo->height / 14 * frameIndex,
             SRCCOPY
         );
     }
