@@ -4,11 +4,11 @@ FrameSize 130*130px
 *hitRect 0, 0, 30, 110
 *attactRect 0, 0, 30, 20
 
-State				Frame(X)	HitOffset(x, y)		AttackOffset
-Idle				5		30.0f, 75.0f			X
-MovingForward		5		30.5f, 75.0f			X
-MovingBackward		5		30.5f, 75.0f			X
-StrongPunch		13		53.0f, 75.0f			60.0f, 10.0f
-StrongKick			10		47.0f, 75.0f			115.0f, 30.0f
-WeakPunch			5		48.0f, 75.0f			95.0f, 40.0f
-WeakKick			9		48.5f, 75.0f			100.0f, 95.0f
+State				Frame(X)	HitOffset(x, y)		AttackOffset		Action		frameSpeed
+Idle				5		30.0f, 75.0f			X				X			14.5f
+MovingForward		5		30.5f, 75.0f			X				X			14.5f
+MovingBackward		5		30.5f, 75.0f			X				X			14.5f
+StrongPunch		13		53.0f, 75.0f			60.0f, 10.0f			11, 12		34.3f
+StrongKick			10		47.0f, 75.0f			115.0f, 30.0f			5, 6			35.0f
+WeakPunch			5		48.0f, 75.0f			95.0f, 40.0f			4, 5			30.0f
+WeakKick			9		48.5f, 75.0f			100.0f, 95.0f			5, 6			28.0f

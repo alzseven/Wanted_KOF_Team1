@@ -107,13 +107,13 @@ void KOF_Character::Init()		// ³ª
 	frame[State::WeakKick].damage = 5;
 	frame[State::WeakPunch].damage = 5;
 
-	frame[State::Idle].frameSpeed = 10.;
-	frame[State::MovingBack].frameSpeed = 15.;
-	frame[State::MovingFoward].frameSpeed = 15.;
-	frame[State::StrongKick].frameSpeed = 30.;
-	frame[State::StrongPunch].frameSpeed = 40.;
-	frame[State::WeakKick].frameSpeed = 30.;
-	frame[State::WeakPunch].frameSpeed = 30.;
+	frame[State::Idle].frameSpeed = 14.5f;
+	frame[State::MovingBack].frameSpeed = 14.5f;
+	frame[State::MovingFoward].frameSpeed = 14.5f;
+	frame[State::StrongKick].frameSpeed = 35.0f;
+	frame[State::StrongPunch].frameSpeed = 34.3f;
+	frame[State::WeakKick].frameSpeed = 28.0f;
+	frame[State::WeakPunch].frameSpeed = 30.0f;
 	//
 
 	currentFrameIndex = 0;
