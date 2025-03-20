@@ -1,7 +1,8 @@
 color 224, 0, 237
 FrameSize 130*130px
 
-*hitRect left 0, top 0, right 30, bottom 110
+*hitRect 0, 0, 30, 110
+*attactRect 0, 0, 30, 20
 
 State				Frame(X)	HitOffset(x, y)		AttackOffset
 Idle				5		30.0f, 75.0f			X
