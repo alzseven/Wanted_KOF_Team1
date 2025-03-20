@@ -20,7 +20,7 @@ void KOF_Character::WeakPunch()
 void KOF_Character::StrongPunch()
 {
 	UpdateRect(combat->hitRect, { Pos.x + frame[State::StrongPunch].hitOffset.x, Pos.y + frame[State::StrongPunch].hitOffset.y});		// 캐릭터마다 다름
-	UpdateRect(combat->attackRect, { Pos.x + frame[State::StrongPunch].attackOffset.x, Pos.y + frame[State::StrongPunch].attackOffset.x });	// 캐릭터마다 다름
+	UpdateRect(combat->attackRect, { Pos.x + frame[State::StrongPunch].attackOffset.x, Pos.y + frame[State::StrongPunch].attackOffset.y });	// 캐릭터마다 다름
 	
 	//combat->damage = strongKickDamage;
 
@@ -89,18 +89,18 @@ void KOF_Character::Init()		// 나
 
 	// stateFrameInfo 초기화 - hit, attack offset 값 설정, 데미지 설정
 	frame = new stateFrameInfo[7];
-	frame[State::StrongKick].attackOffset = {85, 20};
-	frame[State::StrongPunch].attackOffset = {85, 20};
-	frame[State::WeakKick].attackOffset = {85, 80};
-	frame[State::WeakPunch].attackOffset = {85, 20};
+	frame[State::StrongKick].attackOffset = {115.0f, 30.0f};
+	frame[State::StrongPunch].attackOffset = {60.0f, 10.0f};
+	frame[State::WeakKick].attackOffset = {100.0f, 95.0f};
+	frame[State::WeakPunch].attackOffset = {95.0f, 40.0f};
 
-	frame[State::Idle].hitOffset = {50,50};
-	frame[State::MovingBack].hitOffset = {50,50};
-	frame[State::MovingFoward].hitOffset = {50,50};
-	frame[State::StrongKick].hitOffset = {50,50};
-	frame[State::StrongPunch].hitOffset = {50,50};
-	frame[State::WeakKick].hitOffset = {50,50};
-	frame[State::WeakPunch].hitOffset = {50,50};
+	frame[State::Idle].hitOffset = {30.0f, 75.0f};
+	frame[State::MovingBack].hitOffset = {30.5f, 75.0f};
+	frame[State::MovingFoward].hitOffset = {30.5f, 75.0f};
+	frame[State::StrongKick].hitOffset = { 53.0f, 75.0f };
+	frame[State::StrongPunch].hitOffset = { 47.0f, 75.0f };
+	frame[State::WeakKick].hitOffset = { 48.0f, 75.0f };
+	frame[State::WeakPunch].hitOffset = { 48.5f, 75.0f };
 
 	frame[State::StrongKick].damage = 10;
 	frame[State::StrongPunch].damage = 10;
@@ -264,7 +264,7 @@ void KOF_Character::Update()
 			{
 				currentFrameIndex = 0;
 			}
-			UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+			UpdateRect(combat->hitRect, { Pos.x + frame[State::MovingFoward].hitOffset.x, Pos.y + frame[State::MovingFoward].hitOffset.y});
 
 		}
 		if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
@@ -290,7 +290,7 @@ void KOF_Character::Update()
 			{
 				currentFrameIndex = 0;
 			}
-			UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+			UpdateRect(combat->hitRect, { Pos.x + frame[State::MovingBack].hitOffset.x, Pos.y + frame[State::MovingBack].hitOffset.y });
 		}
 		if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 		{
@@ -317,7 +317,7 @@ void KOF_Character::Update()
 	// U key : 약펀치
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x55))
 	{
-		UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });
+		UpdateRect(combat->attackRect, { Pos.x + frame[State::WeakPunch].attackOffset.x, Pos.y + frame[State::WeakPunch].attackOffset.y });
 		WeakPunch();
 	}
 	// I key : 강펀치
