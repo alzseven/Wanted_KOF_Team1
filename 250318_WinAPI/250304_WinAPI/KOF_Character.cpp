@@ -210,10 +210,11 @@ void KOF_Character::Update()
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
 	{
 		currentFrameIndex = 0;
-		currentActionIndex = State::MovingFoward;
+		//currentActionIndex = State::MovingFoward;
 	}
 	else if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 	{
+		currentActionIndex = State::MovingFoward;
 		Pos.x += 2.0f * (frameSpeed / moveSpeed);
 		if (currentFrameIndex >= 5)
 		{
@@ -225,21 +226,20 @@ void KOF_Character::Update()
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
 	{
 		currentActionIndex = State::Idle;
-		if (currentFrameIndex >= 5)
-		{
-			currentFrameIndex = 0;
-		}
+		currentFrameIndex = 0;
 	}
 
 
 	// A Key : 뒤로 이동
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x41))
 	{
-		currentFrameIndex = 0;
 		currentActionIndex = State::MovingBack;
+		currentFrameIndex = 0;
+
 	}
 	else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
 	{
+		currentActionIndex = State::MovingBack;
 		Pos.x -= 2.0f * (frameSpeed / moveSpeed);
 
 		if (currentFrameIndex >= 5)
@@ -251,10 +251,7 @@ void KOF_Character::Update()
 	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 	{
 		currentActionIndex = State::Idle;
-		if (currentFrameIndex >= 5)
-		{
-			currentFrameIndex = 0;
-		}
+		currentFrameIndex = 0;
 	}
 
 
