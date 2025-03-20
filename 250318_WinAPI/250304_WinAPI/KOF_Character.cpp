@@ -179,28 +179,28 @@ void KOF_Character::Update()
 		if (currentFrameIndex >= 6)
 		{
 			currentFrameIndex = 0;
-			currentActionIndex = 0;
+			currentActionIndex = State::Idle;
 		}
 		break;
 	case State::StrongKick:
 		if (currentFrameIndex >= 10)
 		{
 			currentFrameIndex = 0;
-			currentActionIndex = 0;
+			currentActionIndex = State::Idle;
 		}
 		break;
 	case State::WeakPunch:
 		if (currentFrameIndex >= 5)
 		{
 			currentFrameIndex = 0;
-			currentActionIndex = 0;
+			currentActionIndex = State::Idle;
 		}
 		break;
 	case State::WeakKick:
 		if (currentFrameIndex >= 5)
 		{
 			currentFrameIndex = 0;
-			currentActionIndex = 0;
+			currentActionIndex = State::Idle;
 		}
 		break;
 	}
