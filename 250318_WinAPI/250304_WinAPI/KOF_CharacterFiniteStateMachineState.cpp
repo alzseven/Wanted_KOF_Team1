@@ -202,7 +202,7 @@ void KOF_CharacterStateGuard::ExitState(int stateParam)
 void KOF_CharacterStateGuard::Update()
 {
     currentFrameIndex = currentFrameIndex + 1;
-    if (currentFrameIndex > maxFrameCount) currentFrameIndex = maxFrameCount - 1;
+    if (currentFrameIndex > maxFrameCount) currentFrameIndex = maxFrameCount;
 }
 
 void KOF_CharacterStateGuard::Render(HDC hdc)

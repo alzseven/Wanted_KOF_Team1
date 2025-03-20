@@ -25,19 +25,6 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
             MessageBox(g_hWnd, info.spriteSheet[i].filename, TEXT("Warning"), MB_OK);
         }
     }
-    
-    
-    // image = new Image[5];
-    // for (int i = 0; i < 5; i++)
-    // {
-    //     if (FAILED(image[i].Init(info.spriteSheet[i].filename,
-    //         info.spriteSheet[i].width, info.spriteSheet[i].height,
-    //         info.spriteSheet[i].maxFrameX, info.spriteSheet[i].maxFrameY,
-    //         info.spriteSheet[i].isTransparent, info.spriteSheet[i].transColor)))
-    //     {
-    //         MessageBox(g_hWnd, info.spriteSheet[i].filename, TEXT("Warning"), MB_OK);
-    //     }
-    // }
 #pragma endregion
 #pragma region SetData
     pos = {0.0f, 0.0f};
@@ -53,8 +40,9 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 
     //TODO: 
     hitRect = RECT{0, 0, 50, 100};
-    // hitRect = RECT{ 0, 0, info.spriteSheet[0].width/info.spriteSheet[0].maxFrameX, info.spriteSheet[0].height/info.spriteSheet[0].maxFrameY};
+
     attackRect = RECT{0, 0, 0, 0};
+    rcCollision = RECT{0, 0, 50, 100};
 #pragma endregion
 
     this->isMoveable = isMoveable;
@@ -62,8 +50,6 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
     currAnimaionFrame = 0;
 
 #pragma region SetStates
-    //TODO:
-    isWeakPunching = false;
 
     idleState = new KOF_CharacterStateIdle();
     idleState->Init(
@@ -162,11 +148,21 @@ void KOF_Character::Update()
         else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
         {
             // if enemy close
+            //TODO: Get value from config
+            if (enemy && GetDistance(enemy->GetPos(), pos) < 200 && enemy->GetCurrentMachinState() == EFiniteStateMachineState::ATTACK)
+            {
+                fsm->SetState(3, 0, 2);
+                currentMachinState = EFiniteStateMachineState::GUARD;
+            }
+            else
+            {
+                int newState = 1;
+                fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
+                currentMachinState = EFiniteStateMachineState::MOVE;
+            }
             // fsm->SetState(static_cast<int>(EFiniteStateMachineState::GUARD), 0);
             // else
-            int newState = 1;
-            fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
-            currentMachinState = EFiniteStateMachineState::MOVE;
+            
         }
         break;
     case EFiniteStateMachineState::MOVE:
@@ -287,16 +283,14 @@ void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
     }
 }
 
-//TODO:
-void KOF_Character::Move()
-{
-    pos.x += moveSpeed;
-}
-
 void KOF_Character::Move(int dirX)
 {
-    pos.x += moveSpeed * dirX;
+    pos.x = pos.x + moveSpeed * dirX < 0
+                ? 0 : pos.x + moveSpeed * dirX > WINSIZE_X - 75
+                ? WINSIZE_X - 75 : pos.x + moveSpeed * dirX;
+    // pos.x += moveSpeed * dirX;
     UpdateRect(hitRect, pos);
+    UpdateRect(rcCollision, pos);
 }
 
 void KOF_Character::SetStateToIdle()

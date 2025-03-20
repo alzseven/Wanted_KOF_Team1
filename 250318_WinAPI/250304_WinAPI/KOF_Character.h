@@ -25,11 +25,11 @@ private:
     string characterName;
     RECT hitRect;
     RECT attackRect;
-
+    RECT rcCollision;
 
     int currAnimaionFrame;
 
-    bool isWeakPunching;
+    // bool isWeakPunching;
     bool isMoveable;
     COMBATINFO currentCombatInfo;
     UIINFO uiInfo;
@@ -53,7 +53,8 @@ private:
     KOF_CharacterStateGuard *guardState;
 
     EAttackHeightType guardHeight;
-    
+    // FPOINT* enemyPos;
+    KOF_Character* enemy;
 public:
     void WeakPunch();
     void StrongPunch();
@@ -72,6 +73,8 @@ public:
     inline int GetHealth() const { return health; }
     inline RECT GetHitRect() const { return hitRect; }
     inline RECT GetAttackRect() const { return attackRect; }
+    inline RECT GetRcCollision() const { return rcCollision; }
+    
     void CheckAttack();
 
     //TODO:
@@ -96,6 +99,10 @@ public:
     void SetStateToIdle();
     inline void SetGuardHeight(EAttackHeightType guardHeight){this->guardHeight = guardHeight;}
     inline EAttackHeightType GetGuardHeight() const { return this->guardHeight;}
+
+    inline void SetEnemy(KOF_Character* pEnemy) {this->enemy = pEnemy;}
+    // inline void SetEnemyPos(FPOINT* pEnemyPos) { this->enemyPos = pEnemyPos;}
+    inline EFiniteStateMachineState GetCurrentMachinState() const { return this->currentMachinState;}
 };
 
 

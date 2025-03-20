@@ -74,6 +74,10 @@ void GameManager::Init()
     character2->Init(charinfo, false, true);
     character2->SetPos({700, 300});
     //
+
+    character1->SetEnemy(character2);
+    character2->SetEnemy(character1);
+    
     // UI Init
     character1UI = new UI;
     character1UI->Init(character1, 200);
@@ -102,22 +106,32 @@ void GameManager::Release()
 
 void GameManager::Update()
 {
-    // if (character1->GetHealth() <= 0 || character2->GetHealth() <= 0)
-    // {
-    //     //TODO: Game End, Do Something
-    //     int winnerPlayerIndex = character1->GetHealth() <= 0 ? 2 : 1;
-    //     
-    // }
-    // else
-    // {
     background->Update();
+    if (character1->GetHealth() <= 0 || character2->GetHealth() <= 0)
+    {
+        //TODO: Game End, Do Something
+        int winnerPlayerIndex = character1->GetHealth() <= 0 ? 2 : 1;
+        // switch (winnerPlayerIndex)
+        // {
+        // case 1:
+        //     character1->Update();
+        //     break;
+        // case 2:
+        //     character2->Update();
+        //     break;
+        // default:
+        //     //TODO: Wrong value
+        //     break;
+        // }
+    }
+    else
+    {
+        character1->Update();
+        character2->Update();
 
-    character1->Update();
-    character2->Update();
-
-    character1UI->Update();
-    character2UI->Update();
-    // }
+        character1UI->Update();
+        character2UI->Update();
+    }
 
     // Handle Collision
     CheckCollisions();
@@ -125,6 +139,16 @@ void GameManager::Update()
 
 void GameManager::CheckCollisions()
 {
+    if (RectInRect(character1->GetRcCollision(), character2->GetRcCollision()))
+    {
+        int pushPower = 5;
+        // ch1PushAmount = 
+        //
+        // character1->SetPos();
+        // character2->SetPos();
+    }
+    
+    
     // Attacker - character2, hit - character1
     if (RectInRect(character2->GetCurrentAttack().hitRect, character1->GetHitRect()))
     {
