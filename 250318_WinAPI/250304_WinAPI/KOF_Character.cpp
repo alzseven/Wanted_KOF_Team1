@@ -222,7 +222,7 @@ void KOF_Character::Update()
 		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
 
 	}
-	else if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
+	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
 	{
 		currentActionIndex = State::Idle;
 		if (currentFrameIndex >= 5)
@@ -248,7 +248,7 @@ void KOF_Character::Update()
 		}
 		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
 	}
-	else if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 	{
 		currentActionIndex = State::Idle;
 		if (currentFrameIndex >= 5)
