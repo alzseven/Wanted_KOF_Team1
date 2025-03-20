@@ -46,7 +46,7 @@ void GameManager::Init()
     };
     
     character1 = new KOF_Character();
-    character1->Init(charinfo, true, false);
+    character1->Init(charinfo, true, false, 1);
     character1->SetPos({200, 300});
     
     character2 = new KOF_Character();

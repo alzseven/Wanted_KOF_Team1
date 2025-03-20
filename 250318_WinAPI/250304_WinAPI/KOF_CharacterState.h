@@ -3,8 +3,10 @@
 enum class State{
 	Idle,
 	MovingFoward,
-	MovingBack,
-	StrongPunch,
-	StrongKick
-
+	MovingBackward,
+	AttackWeakPunch,
+	AttackStrongPunch,
+	AttackWeakKick,
+	AttackStrongKick,
+	Guard
 };

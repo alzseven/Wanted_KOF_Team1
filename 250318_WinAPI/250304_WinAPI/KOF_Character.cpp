@@ -65,10 +65,56 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 	attackRect = RECT{ 0, 0, 0,0 };
 
 	this->isMoveable = isMoveable;
+	this->isFlip = isFlip;
+	this->playerNum = playerNum;
+
+
+	switch (playerNum)
+	{
+	case 1:
+		MOVEFOWARD = 'd';
+		MOVEBACKWARD = 'a';
+
+		ATTACK_WEAK_PUNCH = 'g';
+		ATTACK_STRONG_PUNCH = 't';
+		ATTACK_WEAK_KICK = 'h';
+		ATTACK_STRONG_KICK = 'y';
+
+		break;
+	case 2:
+		MOVEFOWARD = 'l';
+		MOVEBACKWARD = '\'';
+
+		ATTACK_WEAK_PUNCH = '5';
+		ATTACK_STRONG_PUNCH = '8';
+		ATTACK_WEAK_KICK = '6';
+		ATTACK_STRONG_KICK = '9';
+
+		break;
+	}
+
+
 	elaspedFrame = 0.0f;
 	currAnimaionFrame = 0;
 	isWeakPunching = false;
+
+	KOF_CharacterStateIdle idleState;
+	idleState.Init(this);
+
+	KOF_CharacterStateMove moveState;
+	moveState.Init(this);
+
+	KOF_CharacterStateAttack attackState;
+	attackState.Init(this);
 	
+	KOF_CharacterStateGuard guardState;
+	guardState.Init(this);
+
+	states = new KOF_CharacterFiniteStateMachineState[4]{
+		idleState, moveState, attackState, guardState 
+	};
+	fsm->Init(states);
+
 }
 
 void KOF_Character::Release()
@@ -78,6 +124,75 @@ void KOF_Character::Release()
 
 void KOF_Character::Update()
 {
+	fsm->Update();
+	currentActionState = fsm->GetState();
+
+		switch (currentActionState)
+		{
+		case static_cast<int>(State::Idle):
+			
+			if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_PUNCH)) 
+				fsm->SetState(static_cast<int>(State::AttackWeakPunch));
+			else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_PUNCH)) 
+				fsm->SetState(static_cast<int>(State::AttackStrongPunch));
+			else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_KICK)) 
+				fsm->SetState(static_cast<int>(State::AttackWeakKick));
+			else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_KICK)) 
+				fsm->SetState(static_cast<int>(State::AttackStrongKick));
+
+			else if (KeyManager::GetInstance()->IsStayKeyDown(MOVEFOWARD) ) 
+				fsm->SetState(static_cast<int>(State::MovingFoward));
+			else if (KeyManager::GetInstance()->IsStayKeyDown(MOVEBACKWARD))
+			{
+				// if enemy close
+				//fsm->SetState(Guard);
+				// else4
+				// move backward
+				fsm->SetState(static_cast<int>(State::MovingBackward));
+			}
+		break;
+		case static_cast<int>(State::MovingFoward): case static_cast<int>(State::MovingBackward):
+
+		if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_PUNCH))
+			fsm->SetState(static_cast<int>(State::AttackWeakPunch));
+		else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_PUNCH))
+			fsm->SetState(static_cast<int>(State::AttackStrongPunch));
+		else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_KICK))
+			fsm->SetState(static_cast<int>(State::AttackWeakKick));
+		else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_KICK))
+			fsm->SetState(static_cast<int>(State::AttackStrongKick));
+
+		else if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEFOWARD) || KeyManager::GetInstance()->IsOnceKeyUp(MOVEBACKWARD))
+		{
+			fsm->SetState(static_cast<int>(State::Idle));
+		}
+		break;
+	case static_cast<int>(State::AttackStrongKick):
+		// exit on animation ends
+		
+		
+		break;
+
+	case static_cast<int>(State::AttackStrongPunch):
+		// exit on animation ends
+		break;
+	case static_cast<int>(State::AttackWeakKick):
+		// exit on animation ends
+		break;
+	case static_cast<int>(State::AttackWeakPunch):
+		// exit on animation ends
+		break;
+
+	case static_cast<int>(State::Guard):
+		if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEBACKWARD))
+		{
+			fsm->SetState(static_cast<int>(State::Idle));
+		}
+		break;
+	default: ;
+	}
+	
+
 
 
 	float frameSpeed = 20.0f;
@@ -91,108 +206,13 @@ void KOF_Character::Update()
 		elaspedFrame = RESET;
 	}
 
-	if (currentFrameIndex >= 15 && currentActionState == static_cast<int>(State::Idle))
-	{
-		currentFrameIndex = RESET;
-	}
-
-	switch (currentActionState)
-	{
-	case static_cast<int>(State::StrongPunch):
-		if (currentFrameIndex >= 6)
-		{
-			currentFrameIndex = RESET;
-			currentActionState = static_cast<int>(State::Idle);
-		}
-		break;
-	case static_cast<int>(State::StrongKick):
-		if (currentFrameIndex >= 7)
-		{
-			currentFrameIndex = RESET;
-			currentActionState = static_cast<int>(State::Idle);
-		}
-		break;
-	}
-
-
-	// D key : 앞이동
-	if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
-	{
-		currentFrameIndex = RESET;
-		currentActionState = static_cast<int>(State::MovingFoward);
-	}
-	if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
-	{
-		pos.x += 2.0f * (frameSpeed / moveSpeed);
-		if (currentFrameIndex >= 6)
-		{
-			currentFrameIndex = RESET;
-		}
-	}
-	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
-	{
-		currentFrameIndex = RESET;
-		currentActionState = static_cast<int>(State::Idle);
-	}
-
-
-	// A Key : 뒤로 이동
-	if (KeyManager::GetInstance()->IsOnceKeyDown(0x41))
-	{
-		currentFrameIndex = 0;
-		currentActionState = static_cast<int>(State::MovingBack);
-	}
-	if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
-	{
-		pos.x -= 2.0f * (frameSpeed / moveSpeed);
-
-		if (currentFrameIndex >= 6)
-		{
-			currentFrameIndex = RESET;
-		}
-	}
-	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
-	{
-		currentFrameIndex = RESET;
-		currentActionState = static_cast<int>(State::Idle);
-	}
-
-	// J key : 강펀치
-	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4A))
-	{
-		StrongPunch();
-	}
-
-	// K key : 강발
-	if (KeyManager::GetInstance()->IsOnceKeyDown(0x4B))
-	{
-		StrongKick();
-	}
-
 
 
 }
 
 void KOF_Character::Render(HDC hdc)
 {
-	// 히트박스 확인용
-	//if (currentActionState == static_cast<int>(State::Idle))
-		RenderRect(hdc, pos.x + 27, pos.y, 38, 94);
-
-
-	if (image)
-		image[currentActionState].Render(hdc,pos.x,pos.y,currentFrameIndex,isFlip);
-
-	// 히트박스 확인용
-	if (currentActionState == static_cast<int>(State::StrongKick))
-		//RenderRect(hdc, pos.x + 107, pos.y, 25, 94);
-		RenderRect(hdc,(int)(pos.x + 100 ), (int)(pos.y), 20 ,  100);
-		
-
-	if (currentActionState == static_cast<int>(State::StrongPunch))
-		//RenderRect(hdc, pos.x + 97, pos.y, 20, 94);
-		RenderRect(hdc, (int)(pos.x + 100), (int)(pos.y),  20 ,  100);
-
+	fsm->Render(hdc);
 
 }
 
@@ -204,9 +224,9 @@ void KOF_Character::WeakPunch()
 
 void KOF_Character::StrongPunch()
 {
-	if (currentActionState == static_cast<int>(State::StrongPunch)) return;
+	if (currentActionState == static_cast<int>(State::AttackStrongPunch)) return;
 	currentFrameIndex = RESET;
-	currentActionState = static_cast<int>(State::StrongPunch);
+	currentActionState = static_cast<int>(State::AttackStrongPunch);
 	currentCombatInfo.damage = strongPunchDamage;
 	currentCombatInfo.hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
 
@@ -220,9 +240,9 @@ void KOF_Character::WeakKick()
 
 void KOF_Character::StrongKick()
 {
-	if (currentActionState == static_cast<int>(State::StrongKick)) return;
+	if (currentActionState == static_cast<int>(State::AttackStrongKick)) return;
 	currentFrameIndex = RESET;
-	currentActionState = static_cast<int>(State::StrongKick);
+	currentActionState = static_cast<int>(State::AttackStrongKick);
 	currentCombatInfo.damage = strongKickDamage;
 	currentCombatInfo.hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
 
@@ -257,3 +277,19 @@ int KOF_Character::GetHealth() { return health; }
 RECT KOF_Character::GetHitRect() { return hitRect; }
 
 RECT KOF_Character::GetAttackRect() { return attackRect; }
+
+void KOF_Character::LoopFrame(int frameIndexMax)
+{
+	currentFrameIndex = currentFrameIndex > frameIndexMax ? RESET : currentFrameIndex++;
+}
+
+void KOF_Character::ResetFrame()
+{
+	currentFrameIndex = 0;
+}
+
+void KOF_Character::ReturnToIdle()
+{
+	fsm->SetState(static_cast<int>(State::Idle));
+	currentActionState = fsm->GetState();
+}
