@@ -141,11 +141,11 @@ void GameManager::CheckCollisions()
 {
     if (RectInRect(character1->GetRcCollision(), character2->GetRcCollision()))
     {
-        int pushPower = 5;
-        // ch1PushAmount = 
-        //
-        // character1->SetPos();
-        // character2->SetPos();
+        float pushPower = 1.f;
+        float ch1PushAmount = (character1->GetPos().x < character2->GetPos().x ? -1 : 1) * pushPower;
+        float ch2PushAmount = (character1->GetPos().x < character2->GetPos().x ? 1 : -1) * pushPower;
+        character1->SetPos({character1->GetPos().x + ch1PushAmount, character1->GetPos().y});
+        character2->SetPos({character2->GetPos().x + ch2PushAmount, character2->GetPos().y});
     }
     
     

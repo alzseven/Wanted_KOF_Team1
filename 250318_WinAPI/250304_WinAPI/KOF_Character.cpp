@@ -46,6 +46,7 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 #pragma endregion
 
     this->isMoveable = isMoveable;
+
     elaspedFrame = 0.0f;
     currAnimaionFrame = 0;
 
@@ -121,72 +122,74 @@ void KOF_Character::Release()
 
 void KOF_Character::Update()
 {
-    if (isMoveable == false)
+    if (isMoveable)
+    {
+        switch (currentMachinState)
+        {
+        case EFiniteStateMachineState::IDLE:
+            // Check if Attack Key Pressed
+                CheckAttack();
+            // Check if Move Key Pressed
+            if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
+            {
+                int newState = 1;
+                fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_FORWARD));
+                currentMachinState = EFiniteStateMachineState::MOVE;
+            }
+            // Check if Guard
+            else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
+            {
+                // if enemy close
+                //TODO: Get value from config
+                if (enemy && GetDistance(enemy->GetPos(), pos) < 200 && enemy->GetCurrentMachinState() == EFiniteStateMachineState::ATTACK)
+                {
+                    fsm->SetState(3, 0, 2);
+                    currentMachinState = EFiniteStateMachineState::GUARD;
+                }
+                else
+                {
+                    int newState = 1;
+                    fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
+                    currentMachinState = EFiniteStateMachineState::MOVE;
+                }
+                // fsm->SetState(static_cast<int>(EFiniteStateMachineState::GUARD), 0);
+                // else
+            
+            }
+            break;
+        case EFiniteStateMachineState::MOVE:
+            CheckAttack();
+            if (KeyManager::GetInstance()->IsOnceKeyUp(0x44) || KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+            {
+                fsm->SetState(0);
+                currentMachinState = EFiniteStateMachineState::IDLE;
+            }
+            break;
+        case EFiniteStateMachineState::ATTACK:
+            // exit on animation ends
+                break;
+        case EFiniteStateMachineState::GUARD:
+            if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+            {
+                fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
+                currentMachinState = EFiniteStateMachineState::IDLE;
+            }
+            break;
+        default:
+            //TODO : Something Wrong
+                break;
+        }
+    }
+    else
     {
         if (currentMachinState == EFiniteStateMachineState::IDLE)
         {
-            fsm->SetState(3, 0, 2);
-            currentMachinState = EFiniteStateMachineState::GUARD;
-        }
-
-        return;
-    }
-
-    switch (currentMachinState)
-    {
-    case EFiniteStateMachineState::IDLE:
-        // Check if Attack Key Pressed
-        CheckAttack();
-        // Check if Move Key Pressed
-        if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
-        {
-            int newState = 1;
-            fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_FORWARD));
+            fsm->SetState(1, 0, 1);
             currentMachinState = EFiniteStateMachineState::MOVE;
         }
-        // Check if Guard
-        else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
-        {
-            // if enemy close
-            //TODO: Get value from config
-            if (enemy && GetDistance(enemy->GetPos(), pos) < 200 && enemy->GetCurrentMachinState() == EFiniteStateMachineState::ATTACK)
-            {
-                fsm->SetState(3, 0, 2);
-                currentMachinState = EFiniteStateMachineState::GUARD;
-            }
-            else
-            {
-                int newState = 1;
-                fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
-                currentMachinState = EFiniteStateMachineState::MOVE;
-            }
-            // fsm->SetState(static_cast<int>(EFiniteStateMachineState::GUARD), 0);
-            // else
-            
-        }
-        break;
-    case EFiniteStateMachineState::MOVE:
-        CheckAttack();
-        if (KeyManager::GetInstance()->IsOnceKeyUp(0x44) || KeyManager::GetInstance()->IsOnceKeyUp(0x41))
-        {
-            fsm->SetState(0);
-            currentMachinState = EFiniteStateMachineState::IDLE;
-        }
-        break;
-    case EFiniteStateMachineState::ATTACK:
-        // exit on animation ends
-        break;
-    case EFiniteStateMachineState::GUARD:
-        if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
-        {
-            fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
-            currentMachinState = EFiniteStateMachineState::IDLE;
-        }
-        break;
-    default:
-        //TODO : Something Wrong
-        break;
+        // UpdateRect(rcCollision,pos);
     }
+    
 
     //TODO: Match with timer
     float frameSpeed = 20.0f;
@@ -203,12 +206,15 @@ void KOF_Character::Update()
 void KOF_Character::Render(HDC hdc)
 {
     // 히트박스 확인용
-    Rectangle(hdc, hitRect.left, hitRect.top, hitRect.right, hitRect.bottom);
+    // Rectangle(hdc, hitRect.left, hitRect.top, hitRect.right, hitRect.bottom);
 
+    //
+    Rectangle(hdc, rcCollision.left, rcCollision.top, rcCollision.right, rcCollision.bottom);
+    
     if (fsm) fsm->Render(hdc);
     
     // 히트박스 확인용
-    Rectangle(hdc,currentCombatInfo.hitRect.left, currentCombatInfo.hitRect.top, currentCombatInfo.hitRect.right, currentCombatInfo.hitRect.bottom);
+    // Rectangle(hdc,currentCombatInfo.hitRect.left, currentCombatInfo.hitRect.top, currentCombatInfo.hitRect.right, currentCombatInfo.hitRect.bottom);
 }
 
 

@@ -92,6 +92,7 @@ public:
     {
         this->pos = pos;
         UpdateRect(hitRect, pos);
+        UpdateRect(rcCollision, pos);
         // UpdateRect(attackRect, pos);
     }
     bool GetIsFlip() const { return this->isFlip;}
