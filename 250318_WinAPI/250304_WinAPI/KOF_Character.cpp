@@ -167,14 +167,14 @@ void KOF_Character::Update()
 		elaspedFrame = 0.0f;
 	}
 
-
-	if (currentFrameIndex >= 5 && currentActionIndex == State::Idle)
-	{
-		currentFrameIndex = 0;
-	}
-
 	switch (currentActionIndex)
 	{
+	case State::Idle:
+		if (currentFrameIndex >= 5)
+		{
+			currentFrameIndex = 0;
+		}
+		break;
 	case State::StrongPunch:
 		if (currentFrameIndex >= 6)
 		{
@@ -212,7 +212,7 @@ void KOF_Character::Update()
 		currentFrameIndex = 0;
 		currentActionIndex = State::MovingFoward;
 	}
-	if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
+	else if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 	{
 		Pos.x += 2.0f * (frameSpeed / moveSpeed);
 		if (currentFrameIndex >= 5)
@@ -222,10 +222,13 @@ void KOF_Character::Update()
 		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
 
 	}
-	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
+	else if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
 	{
-		currentFrameIndex = 0;
 		currentActionIndex = State::Idle;
+		if (currentFrameIndex >= 5)
+		{
+			currentFrameIndex = 0;
+		}
 	}
 
 
@@ -235,7 +238,7 @@ void KOF_Character::Update()
 		currentFrameIndex = 0;
 		currentActionIndex = State::MovingBack;
 	}
-	if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
+	else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
 	{
 		Pos.x -= 2.0f * (frameSpeed / moveSpeed);
 
@@ -245,10 +248,13 @@ void KOF_Character::Update()
 		}
 		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
 	}
-	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+	else if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
 	{
-		currentFrameIndex = 0;
 		currentActionIndex = State::Idle;
+		if (currentFrameIndex >= 5)
+		{
+			currentFrameIndex = 0;
+		}
 	}
 
 
@@ -269,7 +275,6 @@ void KOF_Character::Update()
 	// U key : ¾àÆÝÄ¡
 	if (KeyManager::GetInstance()->IsOnceKeyDown(0x55))
 	{
-		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
 		UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });
 		WeakPunch();
 	}
