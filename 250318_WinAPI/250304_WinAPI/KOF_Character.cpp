@@ -167,6 +167,7 @@ void KOF_Character::Update()
 		elaspedFrame = 0.0f;
 	}
 
+	// 액션프레임
 	switch (currentActionIndex)
 	{
 	case State::Idle:
@@ -206,59 +207,62 @@ void KOF_Character::Update()
 	}
 
 
-	// D key : 앞이동
-	if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
+	if(currentActionIndex <= 3)		// 액션을 취할 땐 움직이지 못하게 한다.
 	{
-		currentFrameIndex = 0;
-		//currentActionIndex = State::MovingFoward;
-	}
-	else if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
-	{
-		currentActionIndex = State::MovingFoward;
-		if(currentFrameIndex >=3)
-		{
-			Pos.x += 2.0f * (frameSpeed / moveSpeed);
-		}
-		else
-		{
-			Pos.x += 1.0f * (frameSpeed / moveSpeed);
-		}
-		if (currentFrameIndex >= 5)
+		// D key : 앞이동
+		if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
 		{
 			currentFrameIndex = 0;
+			//currentActionIndex = State::MovingFoward;
 		}
-		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
-
-	}
-	if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
-	{
-		currentActionIndex = State::Idle;
-		currentFrameIndex = 0;
-	}
-
-
-	// A Key : 뒤로 이동
-	if (KeyManager::GetInstance()->IsOnceKeyDown(0x41))
-	{
-		currentActionIndex = State::MovingBack;
-		currentFrameIndex = 0;
-
-	}
-	else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
-	{
-		currentActionIndex = State::MovingBack;
-		Pos.x -= 2.0f * (frameSpeed / moveSpeed);
-
-		if (currentFrameIndex >= 5)
+		else if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 		{
+			currentActionIndex = State::MovingFoward;
+			if (currentFrameIndex >= 3)
+			{
+				Pos.x += 2.0f * (frameSpeed / moveSpeed);
+			}
+			else
+			{
+				Pos.x += 1.0f * (frameSpeed / moveSpeed);
+			}
+			if (currentFrameIndex >= 5)
+			{
+				currentFrameIndex = 0;
+			}
+			UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+
+		}
+		if (KeyManager::GetInstance()->IsOnceKeyUp(0x44))
+		{
+			currentActionIndex = State::Idle;
 			currentFrameIndex = 0;
 		}
-		UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
-	}
-	if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
-	{
-		currentActionIndex = State::Idle;
-		currentFrameIndex = 0;
+
+
+		// A Key : 뒤로 이동
+		if (KeyManager::GetInstance()->IsOnceKeyDown(0x41))
+		{
+			currentActionIndex = State::MovingBack;
+			currentFrameIndex = 0;
+
+		}
+		else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
+		{
+			currentActionIndex = State::MovingBack;
+			Pos.x -= 2.0f * (frameSpeed / moveSpeed);
+
+			if (currentFrameIndex >= 5)
+			{
+				currentFrameIndex = 0;
+			}
+			UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
+		}
+		if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+		{
+			currentActionIndex = State::Idle;
+			currentFrameIndex = 0;
+		}
 	}
 
 
@@ -294,6 +298,7 @@ void KOF_Character::Render(HDC hdc)
 	// test
 	RenderRect(hdc, combat->hitRect);
 	RenderRect(hdc, combat->attackRect);
+
 	// test
 	//RenderRectAtCenter(hdc, Pos.x, Pos.y, 100, 110);
 	if (image)
