@@ -1,9 +1,7 @@
 #pragma once
 #include "CommonFunction.h"
 #include "GameObject.h"
-// #include "KOF_CharacterFiniteStateMachineState.h"
-// #include "KOF_CharacterFiniteStateMachineState.h"
-// #include "KOF_CharacterState.h"
+#include "KOF_CharacterState.h"
 
 enum class EFiniteStateMachineState;
 class KOF_CharacterStateGuard;
@@ -53,7 +51,8 @@ private:
     KOF_CharacterStateMove *moveState;
     KOF_CharacterStateAttack *attackState;
     KOF_CharacterStateGuard *guardState;
-    
+
+    EAttackHeightType guardHeight;
     
 public:
     void WeakPunch();
@@ -69,26 +68,34 @@ public:
     void Update();
     void Render(HDC hdc);
     //---
-    int GetHealth();
-    RECT GetHitRect();
-    RECT GetAttackRect();
+
+    inline int GetHealth() const { return health; }
+    inline RECT GetHitRect() const { return hitRect; }
+    inline RECT GetAttackRect() const { return attackRect; }
     void CheckAttack();
 
     //TODO:
     inline COMBATINFO GetCurrentAttack(){ return this->currentCombatInfo;}
-    inline void ResetAttack(){ currentCombatInfo.damage = 0; currentCombatInfo.hitRect.left = 0; currentCombatInfo.hitRect.top = 0;}
+    inline void ResetAttack()
+    {
+        currentCombatInfo.damage = 0; UpdateRect(currentCombatInfo.hitRect, {0,0});
+        currentCombatInfo.attackHeightType = EAttackHeightType::NONE;
+    }
     void GetDamage(int damage);
+    void GetDamage(int damage, EAttackHeightType attackHeight);
     void Move();
     void Move(int dirX);
     inline void SetPos(FPOINT pos)
     {
         this->pos = pos;
         UpdateRect(hitRect, pos);
-        UpdateRect(attackRect, pos);
+        // UpdateRect(attackRect, pos);
     }
     bool GetIsFlip() const { return this->isFlip;}
     inline FPOINT GetPos() const { return this->pos;}
     void SetStateToIdle();
+    inline void SetGuardHeight(EAttackHeightType guardHeight){this->guardHeight = guardHeight;}
+    inline EAttackHeightType GetGuardHeight() const { return this->guardHeight;}
 };
 
 

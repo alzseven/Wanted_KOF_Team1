@@ -11,6 +11,7 @@ enum class State{
 
 enum class EAttackHeightType
 {
+	NONE = 0,
 	UPPER,
 	LOWER
 };

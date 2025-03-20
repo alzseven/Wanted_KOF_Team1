@@ -2,6 +2,7 @@
 
 #include "Image.h"
 #include "KOF_Character.h"
+#include "KOF_CharacterState.h"
 
 
 void KOF_CharacterFiniteStateMachineState::Init(KOF_Character* character, Image* stateImage, int maxFrameCount)
@@ -13,17 +14,17 @@ void KOF_CharacterFiniteStateMachineState::Init(KOF_Character* character, Image*
     currentFrameIndex = 0;
 }
 
-void KOF_CharacterFiniteStateMachineState::EnterState(int stateParam)
-{
-}
-
-void KOF_CharacterFiniteStateMachineState::ExitState(int stateParam)
-{
-}
-
-void KOF_CharacterFiniteStateMachineState::Update()
-{
-}
+// void KOF_CharacterFiniteStateMachineState::EnterState(int stateParam)
+// {
+// }
+//
+// void KOF_CharacterFiniteStateMachineState::ExitState(int stateParam)
+// {
+// }
+//
+// void KOF_CharacterFiniteStateMachineState::Update()
+// {
+// }
 
 void KOF_CharacterFiniteStateMachineState::Release()
 {
@@ -31,10 +32,6 @@ void KOF_CharacterFiniteStateMachineState::Release()
         delete character;
     if (stateImage)
         delete stateImage;
-}
-
-void KOF_CharacterFiniteStateMachineState::Render(HDC hdc)
-{
 }
 
 void KOF_CharacterStateIdle::Init(KOF_Character* character, Image* stateImage, int maxFrameCount)
@@ -129,11 +126,28 @@ void KOF_CharacterStateAttack::EnterState(int stateParam)
 {
     currentFrameIndex = 0;
     attackType = static_cast<EAttackType>(stateParam);
+    switch (attackType)
+    {
+    case EAttackType::WEAK_PUNCH:
+        character->WeakPunch();
+        break;
+    case EAttackType::WEAK_KICK:
+        character->WeakKick();
+        break;
+    case EAttackType::STRONG_PUNCH:
+        character->StrongPunch();
+        break;
+    case EAttackType::STRONG_KICK:
+        character->StrongKick();
+        break;
+    default:
+        break;
+    }
 }
 
 void KOF_CharacterStateAttack::ExitState(int stateParam)
 {
-
+    character->ResetAttack();
 }
 
 void KOF_CharacterStateAttack::Update()
@@ -157,21 +171,38 @@ void KOF_CharacterStateAttack::Render(HDC hdc)
 
 void KOF_CharacterStateGuard::Init(KOF_Character* character, Image* stateImage, int maxFrameCount)
 {
+    KOF_CharacterFiniteStateMachineState::Init(character, stateImage, maxFrameCount);    
 }
 
 void KOF_CharacterStateGuard::EnterState(int stateParam)
 {
     currentFrameIndex = 0;
+    guardHeightType = static_cast<EAttackHeightType>(stateParam);
+    switch (guardHeightType)
+    {
+    case EAttackHeightType::NONE:
+        break;
+    case EAttackHeightType::UPPER:
+        character->SetGuardHeight(EAttackHeightType::UPPER);
+        break;
+    case EAttackHeightType::LOWER:
+        character->SetGuardHeight(EAttackHeightType::LOWER);
+        break;
+    default:
+        //TODO: Wrong cases
+        break;
+    }
 }
 
 void KOF_CharacterStateGuard::ExitState(int stateParam)
 {
-    
+    character->SetGuardHeight(EAttackHeightType::NONE);
 }
 
 void KOF_CharacterStateGuard::Update()
 {
-    
+    currentFrameIndex = currentFrameIndex + 1;
+    if (currentFrameIndex > maxFrameCount) currentFrameIndex = maxFrameCount - 1;
 }
 
 void KOF_CharacterStateGuard::Render(HDC hdc)
