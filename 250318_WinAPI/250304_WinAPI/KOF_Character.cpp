@@ -207,7 +207,7 @@ void KOF_Character::Update()
 	}
 
 
-	if(currentActionIndex <= 3)		// 액션을 취할 땐 움직이지 못하게 한다.
+	if(currentActionIndex < 3)		// 액션을 취할 땐 움직이지 못하게 한다.
 	{
 		// D key : 앞이동
 		if (KeyManager::GetInstance()->IsOnceKeyDown(0x44))
