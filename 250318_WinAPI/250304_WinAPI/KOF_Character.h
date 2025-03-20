@@ -6,6 +6,7 @@ class Image;
 class KOF_Character : public GameObject
 {
 	int health;
+	int maxHealth;
 	int weakPunchDamage;
 	int weakKickDamage;
 	int strongPunchDamage;
@@ -27,7 +28,8 @@ public:
 	void Move(int posX, int posY);
 	inline int getMoveSpeed() { return moveSpeed; };
 	inline int getJump() { return jump; };
-	inline int getHealth() { return health; };
+	inline int getCurrentHealth() { return health; };
+	inline int getMaxHealth() { return maxHealth; };
 
 	void Init();
 	void Release();
@@ -37,5 +39,5 @@ public:
 	KOF_Character();
 	~KOF_Character();
 
-	void SetHealth(int newHealth) { health = newHealth; }
+	void SetHealth(int newHealth);
 };

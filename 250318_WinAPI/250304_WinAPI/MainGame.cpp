@@ -29,11 +29,15 @@ void MainGame::Init()
 	/*iori = new KOF_Iori();
 	iori->Init();*/
 
-	myCharacter = new KOF_Character();		//상대 플레이어 업데이트
+	myCharacter = new KOF_Character();		//자신의 플레이어 업데이트
 	myCharacter->Init();
+	hostileCharacter = new KOF_Character();	//상대 플레이어
+	hostileCharacter->Init();
 
 	GameUI = new UI();
 	GameUI->Init(myCharacter);
+	GameUI_Hostile = new UI();
+	GameUI_Hostile->Init_hostile(hostileCharacter);
 }
 
 void MainGame::Release()
@@ -51,7 +55,13 @@ void MainGame::Release()
 		delete GameUI;
 		GameUI = nullptr;
 	}
-
+	
+	if (GameUI_Hostile)
+	{
+		GameUI_Hostile->Release();
+		delete GameUI_Hostile;
+		GameUI_Hostile = nullptr;
+	}
 
 	if (backGround)
 	{
@@ -75,8 +85,14 @@ void MainGame::Update()
 	
 	if (GameUI)
 	{
-		myCharacter->SetHealth(myCharacter->getHealth() - 1);
-		GameUI->Render_Update_HealthBar(hdc, myCharacter);
+		myCharacter->SetHealth(myCharacter->getCurrentHealth() - 10);	//상수(10)는 체력을 깔 데미지
+		GameUI->Update_HealthBar(myCharacter);
+	}
+
+	if (GameUI_Hostile)
+	{
+		hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 0.01f);
+		GameUI_Hostile->Update_HealthBar(hostileCharacter);
 	}
 
 	InvalidateRect(g_hWnd, NULL, false);
@@ -92,6 +108,9 @@ void MainGame::Render(HDC hdc)
 
 	GameUI->RenderBoxOutline(hBackBufferDC);
 	GameUI->Render_HealthBar(hBackBufferDC);
+
+	GameUI_Hostile->RenderBoxOutline(hBackBufferDC);
+	GameUI_Hostile->Render_HealthBar_Hostile(hBackBufferDC);
 
 	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
 	TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
