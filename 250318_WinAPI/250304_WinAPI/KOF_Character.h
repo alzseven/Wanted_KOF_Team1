@@ -3,7 +3,8 @@
 #include "GameObject.h"
 
 class Image;
-
+class KOF_CharacterFiniteStateMachine;
+class KOF_CharacterFiniteStateMachineState;
 
 class KOF_Character : public GameObject
 {
@@ -47,6 +48,9 @@ private:
 
     bool isFlip;
 
+    KOF_CharacterFiniteStateMachine* fsm;
+    KOF_CharacterFiniteStateMachineState* states;
+
 
 
 public:
@@ -57,13 +61,7 @@ public:
     bool Guard(bool);
 
     
-<<<<<<< Updated upstream
-    void Init(bool isMoveable = true);
-    void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false);
-=======
-    // void Init(bool isMoveable = true);
     void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false, int playerNum);
->>>>>>> Stashed changes
     void Release();
     void Update();
     void Render(HDC hdc);
@@ -75,6 +73,7 @@ public:
     int GetHealth();
     RECT GetHitRect();
     RECT GetAttackRect();
+
 
 
 
@@ -90,6 +89,11 @@ public:
         UpdateRect(hitRect, pos);
         UpdateRect(attackRect, pos);
     }    
+
+    bool GetIsFlip() { return this->isFlip; }
+
+    
+    
 };
 
 

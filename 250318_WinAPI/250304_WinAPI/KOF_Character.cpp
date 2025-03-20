@@ -3,43 +3,17 @@
 #include "KOF_CharacterState.h"
 #include "CommonFunction.h"
 #include "Image.h"
+#include "KOF_CharacterFiniteStateMachine.h"
+#include "KOF_CharacterFiniteStateMachineState.h"
 
-void KOF_Character::Init(bool isMovable)
+
+void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip, int playerNum)
 {
-	health = 100;
-	weakPunchDamage = 10;
-	weakKickDamage = 15;
-	strongPunchDamage = 20;
-	strongKickDamage = 25;
-	pos = {30, 300};
-	moveSpeed = 10.0f;
-
-	characterName = "None";
-
-	currentFrameIndex = 0;
-	currentActionState = 0;
-	elaspedFrame = 0.0f;
-    currentCombatInfo.damage = weakPunchDamage;
-    currentCombatInfo.hitRect = hitRect;
-    hitRect = RECT{ (int)(pos.x + 100), (int)(pos.y),  (int)(pos.x + 100) + 20 , (int)pos.y + 100 };
-	
-    isWeakPunching = true;
-
-    this->isMoveable = isMoveable;
-
-	elaspedFrame = 0;
-    currAnimaionFrame = 0;
-
-}
-
-void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
-{
-
 	image = new Image[5];
-	
+
 	pos = { 0.0f, 0.0f };
 	moveSpeed = 5.0f;
-		
+
 	for (int i = 0; i < 5; i++)
 	{
 		if (FAILED(image[i].Init(info.spriteSheet[i].filename,
@@ -106,12 +80,12 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
 
 	KOF_CharacterStateAttack attackState;
 	attackState.Init(this);
-	
+
 	KOF_CharacterStateGuard guardState;
 	guardState.Init(this);
 
 	states = new KOF_CharacterFiniteStateMachineState[4]{
-		idleState, moveState, attackState, guardState 
+		idleState, moveState, attackState, guardState
 	};
 	fsm->Init(states);
 

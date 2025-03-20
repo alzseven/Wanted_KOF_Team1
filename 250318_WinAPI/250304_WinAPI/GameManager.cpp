@@ -50,7 +50,7 @@ void GameManager::Init()
     character1->SetPos({200, 300});
     
     character2 = new KOF_Character();
-    character2->Init(charinfo, true, true);
+    character2->Init(charinfo, true, true, 2);
     character2->SetPos({700, 300});
 
     // UI Init
