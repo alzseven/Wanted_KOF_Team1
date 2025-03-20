@@ -209,3 +209,32 @@ void KOF_CharacterStateGuard::Render(HDC hdc)
 {
     stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
 }
+
+// ---
+
+void KOF_CharacterStateHitStun::Init(KOF_Character* character, Image* stateImage, int maxFrameCount)
+{
+    KOF_CharacterFiniteStateMachineState::Init(character, stateImage, maxFrameCount);
+}
+
+void KOF_CharacterStateHitStun::EnterState(int stateParam)
+{
+    currentFrameIndex = 0;
+    stunFrame = stateParam;
+}
+
+void KOF_CharacterStateHitStun::ExitState(int stateParam)
+{
+}
+
+void KOF_CharacterStateHitStun::Update()
+{
+    currentFrameIndex = currentFrameIndex + 1;
+    if (currentFrameIndex > stunFrame) character->SetStateToIdle();
+}
+
+void KOF_CharacterStateHitStun::Render(HDC hdc)
+{
+    // KOF_CharacterFiniteStateMachineState::Render(hdc);
+    stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex >= maxFrameCount ? maxFrameCount : currentFrameIndex);
+}

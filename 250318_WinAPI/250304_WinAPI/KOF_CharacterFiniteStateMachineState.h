@@ -69,3 +69,16 @@ public:
     void Update() override;
     void Render(HDC hdc) override;
 };
+
+//---
+class KOF_CharacterStateHitStun : public KOF_CharacterFiniteStateMachineState
+{
+private:
+    int stunFrame;
+public:
+    void Init(KOF_Character* character, Image* stateImage, int maxFrameCount) override;
+    void EnterState(int stateParam = 0) override;
+    void ExitState(int stateParam = 0) override;
+    void Update() override;
+    void Render(HDC hdc) override;
+};

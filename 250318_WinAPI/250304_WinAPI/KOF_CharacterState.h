@@ -28,6 +28,7 @@ enum class EFiniteStateMachineState
 	// ATTACK_STRONG_PUNCH	= 5
 	// ATTACK_STRONG_KICK	= 6
 	GUARD					= 7,
+	HITSTUN					= 8,
 	COUNT_MAX			//  = 8
 };
 
