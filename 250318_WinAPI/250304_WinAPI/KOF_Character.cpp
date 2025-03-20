@@ -6,10 +6,10 @@
 // 새로 만듦
 void KOF_Character::WeakPunch()
 {
-	//UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });		
-	//UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });	
+	UpdateRect(combat->hitRect, { Pos.x + frame[State::WeakPunch].hitOffset.x, Pos.y + frame[State::WeakPunch].hitOffset.y });
+	UpdateRect(combat->attackRect, { Pos.x + frame[State::WeakPunch].attackOffset.x, Pos.y + frame[State::WeakPunch].attackOffset.y });
 
-	combat->damage = weakKickDamage;
+	//combat->damage = weakKickDamage;
 
 	if (currentActionIndex == State::WeakPunch) return;
 	currentFrameIndex = 0;
@@ -19,10 +19,10 @@ void KOF_Character::WeakPunch()
 
 void KOF_Character::StrongPunch()
 {
-	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });		// 캐릭터마다 다름
-	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });	// 캐릭터마다 다름
+	UpdateRect(combat->hitRect, { Pos.x + frame[State::StrongPunch].hitOffset.x, Pos.y + frame[State::StrongPunch].hitOffset.y});		// 캐릭터마다 다름
+	UpdateRect(combat->attackRect, { Pos.x + frame[State::StrongPunch].attackOffset.x, Pos.y + frame[State::StrongPunch].attackOffset.x });	// 캐릭터마다 다름
 	
-	combat->damage = strongKickDamage;
+	//combat->damage = strongKickDamage;
 
 	if (currentActionIndex == State::StrongPunch) return;
 	currentFrameIndex = 0;
@@ -32,10 +32,10 @@ void KOF_Character::StrongPunch()
 
 void KOF_Character::WeakKick()
 {
-	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
-	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 80 });
+	UpdateRect(combat->hitRect, { Pos.x + frame[State::WeakKick].hitOffset.x, Pos.y + frame[State::WeakKick].hitOffset.y });
+	UpdateRect(combat->attackRect, { Pos.x + frame[State::WeakKick].attackOffset.x, Pos.y + frame[State::WeakKick].attackOffset.y });
 
-	combat->damage = weakKickDamage;
+	//combat->damage = weakKickDamage;
 
 	if (currentActionIndex == State::WeakKick) return;
 	currentFrameIndex = 0;
@@ -45,10 +45,10 @@ void KOF_Character::WeakKick()
 
 void KOF_Character::StrongKick()
 {
-	UpdateRect(combat->hitRect, { Pos.x + 50, Pos.y + 50 });
-	UpdateRect(combat->attackRect, { Pos.x + 85, Pos.y + 20 });
+	UpdateRect(combat->hitRect, { Pos.x + frame[State::StrongKick].hitOffset.x, Pos.y + frame[State::StrongKick].hitOffset.y });
+	UpdateRect(combat->attackRect, { Pos.x + frame[State::StrongKick].attackOffset.x, Pos.y + frame[State::StrongKick].attackOffset.y });
 
-	combat->damage = strongKickDamage;
+	//combat->damage = strongKickDamage;
 
 	if (currentActionIndex == State::StrongKick) return;
 	currentFrameIndex = 0;
@@ -84,9 +84,37 @@ void KOF_Character::Init()		// 나
 
 	combat->hitRect = { 0, 0, 30, 110 };
 	combat->attackRect = { 0,0,30, 20 };
-	combat->damage = 10;
+	//combat->damage = 10;
 	//
 
+	// stateFrameInfo 초기화 - hit, attack offset 값 설정, 데미지 설정
+	frame = new stateFrameInfo[7];
+	frame[State::StrongKick].attackOffset = {85, 20};
+	frame[State::StrongPunch].attackOffset = {85, 20};
+	frame[State::WeakKick].attackOffset = {85, 80};
+	frame[State::WeakPunch].attackOffset = {85, 20};
+
+	frame[State::Idle].hitOffset = {50,50};
+	frame[State::MovingBack].hitOffset = {50,50};
+	frame[State::MovingFoward].hitOffset = {50,50};
+	frame[State::StrongKick].hitOffset = {50,50};
+	frame[State::StrongPunch].hitOffset = {50,50};
+	frame[State::WeakKick].hitOffset = {50,50};
+	frame[State::WeakPunch].hitOffset = {50,50};
+
+	frame[State::StrongKick].damage = 10;
+	frame[State::StrongPunch].damage = 10;
+	frame[State::WeakKick].damage = 5;
+	frame[State::WeakPunch].damage = 5;
+
+	frame[State::Idle].frameSpeed = 10.;
+	frame[State::MovingBack].frameSpeed = 15.;
+	frame[State::MovingFoward].frameSpeed = 15.;
+	frame[State::StrongKick].frameSpeed = 30.;
+	frame[State::StrongPunch].frameSpeed = 40.;
+	frame[State::WeakKick].frameSpeed = 30.;
+	frame[State::WeakPunch].frameSpeed = 30.;
+	//
 
 	currentFrameIndex = 0;
 	currentActionIndex = 0;
@@ -140,10 +168,10 @@ void KOF_Character::Init()		// 나
 
 void KOF_Character::Release()		// 나
 {
-	if (image)
+	if (frame)
 	{
-		delete [] image;
-		image = nullptr;
+		delete [] frame;
+		frame = nullptr;
 	}
 
 	if (combat)
@@ -151,13 +179,19 @@ void KOF_Character::Release()		// 나
 		delete combat;
 		combat = nullptr;
 	}
+
+	if (image)
+	{
+		delete [] image;
+		image = nullptr;
+	}
 }
 
 void KOF_Character::Update()
 {
-	float frameSpeed = 10.0f;
+	//float frameSpeed = 10.0f;
 
-	elaspedFrame += frameSpeed;
+	elaspedFrame += frame[currentActionIndex].frameSpeed;
 
 
 	if (elaspedFrame >= 100.0f)
@@ -220,11 +254,11 @@ void KOF_Character::Update()
 			currentActionIndex = State::MovingFoward;
 			if (currentFrameIndex >= 3)
 			{
-				Pos.x += 2.0f * (frameSpeed / moveSpeed);
+				Pos.x += 2.0f * (frame[currentActionIndex].frameSpeed / moveSpeed);
 			}
 			else
 			{
-				Pos.x += 1.0f * (frameSpeed / moveSpeed);
+				Pos.x += 1.0f * (frame[currentActionIndex].frameSpeed / moveSpeed);
 			}
 			if (currentFrameIndex >= 5)
 			{
@@ -250,7 +284,7 @@ void KOF_Character::Update()
 		else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
 		{
 			currentActionIndex = State::MovingBack;
-			Pos.x -= 2.0f * (frameSpeed / moveSpeed);
+			Pos.x -= 2.0f * (frame[currentActionIndex].frameSpeed / moveSpeed);
 
 			if (currentFrameIndex >= 5)
 			{

@@ -21,6 +21,7 @@ private:
 	float elaspedFrame;
 
 	combatInfo* combat;
+	stateFrameInfo* frame;
 
 public:
 	void WeakPunch();
