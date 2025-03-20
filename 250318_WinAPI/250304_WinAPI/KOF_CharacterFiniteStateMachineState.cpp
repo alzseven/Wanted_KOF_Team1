@@ -5,7 +5,7 @@ void KOF_CharacterStateMove::Init(KOF_Character* character)
 {
     this->character = character;
     frameIndex = 0;
-    frameIndexMax = 15;
+    frameIndexMax = 6;
 }
 
 void KOF_CharacterStateMove::EnterState()
@@ -26,7 +26,7 @@ void KOF_CharacterStateMove::Update()
 
 void KOF_CharacterStateMove::Render(HDC hdc)
 {
-    
+    // TODO
 }
 
 //---
