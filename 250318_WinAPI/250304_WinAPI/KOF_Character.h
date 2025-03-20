@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "KOF_CharacterState.h"
 
+class KOF_CharacterStateHitStun;
 enum class EFiniteStateMachineState;
 class KOF_CharacterStateGuard;
 class KOF_CharacterStateAttack;
@@ -51,10 +52,21 @@ private:
     KOF_CharacterStateMove *moveState;
     KOF_CharacterStateAttack *attackState;
     KOF_CharacterStateGuard *guardState;
-
+    KOF_CharacterStateHitStun *hitStunState;
     EAttackHeightType guardHeight;
     // FPOINT* enemyPos;
     KOF_Character* enemy;
+
+    int playerNum;
+    // Key
+
+    int MOVEFOWARD;
+    int MOVEBACKWARD;
+
+    int ATTACK_WEAK_PUNCH;
+    int ATTACK_STRONG_PUNCH;
+    int ATTACK_WEAK_KICK;
+    int ATTACK_STRONG_KICK;
 public:
     void WeakPunch();
     void StrongPunch();
@@ -64,7 +76,7 @@ public:
 
     
     // void Init(bool isMoveable = true);
-    void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false);
+    void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false, int playerNum = 0);
     void Release();
     void Update();
     void Render(HDC hdc);
@@ -81,7 +93,8 @@ public:
     inline COMBATINFO GetCurrentAttack(){ return this->currentCombatInfo;}
     inline void ResetAttack()
     {
-        currentCombatInfo.damage = 0; UpdateRect(currentCombatInfo.hitRect, {0,0});
+        currentCombatInfo.damage = 0;
+        UpdateRect(currentCombatInfo.hitRect, {0,0});
         currentCombatInfo.attackHeightType = EAttackHeightType::NONE;
     }
     void GetDamage(int damage);

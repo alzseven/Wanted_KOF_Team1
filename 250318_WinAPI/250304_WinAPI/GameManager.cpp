@@ -14,6 +14,63 @@ void GameManager::Init()
 
     // Character Init
     // TODO: Set random two characters how?
+    CharacterInfo charinfo2 = CharacterInfo{
+        100,
+        5,
+        7,
+        10,
+        14,
+        "King",
+        new SpriteSheetInfo[10]
+        {SpriteSheetInfo{
+            "King_Idle",
+            TEXT("Image/King/KingIdle.bmp"),
+            650, 130, 5, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_Foward",
+            TEXT("Image/King/kingMovingForward.bmp"),
+            650, 130, 5, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_Back",
+            TEXT("Image/King/kingMovingBackward.bmp"),
+            650, 130, 5, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_WeakPunch",
+            TEXT("Image/King/kingWeakPunch.bmp"),
+            650, 130, 5, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_WeakKick",
+            TEXT("Image/King/KingWeakKick.bmp"),
+            1170, 130, 9, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_StrongPunch",
+            TEXT("Image/King/kingStrongPunch.bmp"),
+            1690,130, 13, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_StrongKick",
+            TEXT("Image/King/KingStrongKick.bmp"),
+            1300,130, 10, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_Gaurd",
+            TEXT("Image/King/KingSitGuard.bmp"),
+            260, 130, 2, 1, true,RGB(224,0,237)
+        },
+        SpriteSheetInfo{
+            "King_Back",
+            TEXT("Image/King/KingGuard.bmp"),
+            260, 130, 2, 1, true,RGB(224,0,237)
+        },
+
+            
+        }
+    };
     CharacterInfo charinfo = CharacterInfo{
         100,
         5,
@@ -25,53 +82,57 @@ void GameManager::Init()
             SpriteSheetInfo{
                 "Mai_Idle",
                 TEXT("Image/Mai/Mai_Idle.bmp"),
-                1813, 127, 15, 1, true,RGB(17,91,124)
+                1736, 129, 14, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_Foward",
                 TEXT("Image/Mai/Mai_FowardMove.bmp"),
-                725, 127, 6, 1, true,RGB(17,91,124)
+                744, 129, 6, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_Back",
                 TEXT("Image/Mai/Mai_BackwardMove.bmp"),
-                712, 127, 6, 1, true,RGB(17,91,124)
+                744, 129, 6, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_WeakPunch",
                 TEXT("Image/Mai/Mai_WeakPunch.bmp"),
-                707, 127, 6, 1, true,RGB(17,91,124)
+                744, 129, 6, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_WeakKick",
                 TEXT("Image/Mai/Mai_WeakKick.bmp"),
-                1089, 127, 9, 1, true,RGB(17,91,124)
+                1116, 127, 9, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_StrongPunch",
                 TEXT("Image/Mai/Mai_StrongPunch.bmp"),
-                716,127, 6, 1, true,RGB(17,91,124)
+                744,129, 6, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_StrongKick",
                 TEXT("Image/Mai/Mai_StrongKick.bmp"),
-                843,127, 7, 1, true,RGB(17,91,124)
+                868,129, 7, 1, true,RGB(255,0,255)
             },
             SpriteSheetInfo{
                 "Mai_Gaurd",
                 TEXT("Image/Mai/Mai_Gaurd.bmp"),
                 246, 127, 2, 1, true,RGB(17,91,124)
             },
-
+            SpriteSheetInfo{
+                "Mai_Back",
+                TEXT("Image/Mai/Mai_BackwardMove.bmp"),
+                744, 129, 6, 1, true,RGB(255,0,255)
+            },
         }
     };
 
     character1 = new KOF_Character();
-    character1->Init(charinfo, true, false);
+    character1->Init(charinfo2, true, false, 1);
     character1->SetPos({200, 300});
 
     character2 = new KOF_Character();
-    character2->Init(charinfo, false, true);
+    character2->Init(charinfo, false, true, 2);
     character2->SetPos({700, 300});
     //
 

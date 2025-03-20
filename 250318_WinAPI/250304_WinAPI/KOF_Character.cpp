@@ -6,7 +6,7 @@
 #include "KOF_CharacterFiniteStateMachine.h"
 #include "KOF_CharacterFiniteStateMachineState.h"
 
-void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
+void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip, int playerNum)
 {
 #pragma region SetImages
     //TODO:
@@ -94,13 +94,23 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
         },
         info.spriteSheet[static_cast<int>(EFiniteStateMachineState::GUARD)].maxFrameX
     );
-
+    hitStunState = new KOF_CharacterStateHitStun();
+    hitStunState->Init(
+        this,
+        new Image[]
+        {
+            image[static_cast<int>(EFiniteStateMachineState::HITSTUN)]
+        },
+        info.spriteSheet[static_cast<int>(EFiniteStateMachineState::HITSTUN)].maxFrameX
+    );
+    
     states =
-        new KOF_CharacterFiniteStateMachineState*[4];
+        new KOF_CharacterFiniteStateMachineState*[5];
     states[0] = idleState;
     states[1] = moveState;
     states[2] = attackState;
     states[3] = guardState;
+    states[4] = hitStunState;
     fsm = new KOF_CharacterFiniteStateMachine();
     fsm->Init(states);
 
@@ -108,6 +118,33 @@ void KOF_Character::Init(const CharacterInfo info, bool isMoveable, bool isFlip)
     currentMachinState = EFiniteStateMachineState::IDLE;
 #pragma endregion
     guardHeight = EAttackHeightType::NONE;
+    this->playerNum = playerNum;
+    
+    switch (this->playerNum)
+    {
+    case 1:
+        // isMoveable = true;
+        MOVEFOWARD = 0x44;
+        MOVEBACKWARD = 0x41;
+
+        ATTACK_WEAK_PUNCH = 0x47;
+        ATTACK_STRONG_PUNCH = 0x54;
+        ATTACK_WEAK_KICK = 0x48;
+        ATTACK_STRONG_KICK = 0x59;
+
+        break;
+    case 2:
+        // isMoveable = true;
+        MOVEFOWARD = 0x4C;
+        MOVEBACKWARD = 0x6F;
+
+        ATTACK_WEAK_PUNCH = 0x65;
+        ATTACK_STRONG_PUNCH = 0x68;
+        ATTACK_WEAK_KICK = 0x66;
+        ATTACK_STRONG_KICK = 0x69;
+
+        break;
+    }
 }
 
 void KOF_Character::Release()
@@ -130,14 +167,14 @@ void KOF_Character::Update()
             // Check if Attack Key Pressed
                 CheckAttack();
             // Check if Move Key Pressed
-            if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
+            if (KeyManager::GetInstance()->IsStayKeyDown(MOVEFOWARD))
             {
                 int newState = 1;
                 fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_FORWARD));
                 currentMachinState = EFiniteStateMachineState::MOVE;
             }
             // Check if Guard
-            else if (KeyManager::GetInstance()->IsStayKeyDown(0x41))
+            else if (KeyManager::GetInstance()->IsStayKeyDown(MOVEBACKWARD))
             {
                 // if enemy close
                 //TODO: Get value from config
@@ -159,7 +196,7 @@ void KOF_Character::Update()
             break;
         case EFiniteStateMachineState::MOVE:
             CheckAttack();
-            if (KeyManager::GetInstance()->IsOnceKeyUp(0x44) || KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+            if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEFOWARD) || KeyManager::GetInstance()->IsOnceKeyUp(MOVEBACKWARD))
             {
                 fsm->SetState(0);
                 currentMachinState = EFiniteStateMachineState::IDLE;
@@ -169,11 +206,14 @@ void KOF_Character::Update()
             // exit on animation ends
                 break;
         case EFiniteStateMachineState::GUARD:
-            if (KeyManager::GetInstance()->IsOnceKeyUp(0x41))
+            if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEBACKWARD))
             {
                 fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
                 currentMachinState = EFiniteStateMachineState::IDLE;
             }
+            break;
+        case EFiniteStateMachineState::HITSTUN:
+            // exit on animation ends
             break;
         default:
             //TODO : Something Wrong
@@ -182,11 +222,11 @@ void KOF_Character::Update()
     }
     else
     {
-        if (currentMachinState == EFiniteStateMachineState::IDLE)
-        {
-            fsm->SetState(1, 0, 1);
-            currentMachinState = EFiniteStateMachineState::MOVE;
-        }
+        // if (currentMachinState == EFiniteStateMachineState::IDLE)
+        // {
+        //     fsm->SetState(1, 0, 1);
+        //     currentMachinState = EFiniteStateMachineState::MOVE;
+        // }
         // UpdateRect(rcCollision,pos);
     }
     
@@ -224,7 +264,7 @@ void KOF_Character::WeakPunch()
     
     currentCombatInfo.attackHeightType = EAttackHeightType::UPPER;
     //TODO: Rename to Attack
-    currentCombatInfo.hitRect = RECT{ 100, 0, 120, 100};
+    currentCombatInfo.hitRect = RECT{ 0, 30, 220, 60};
     UpdateRect(currentCombatInfo.hitRect, pos);
 }
 
@@ -234,7 +274,7 @@ void KOF_Character::StrongPunch()
     
     currentCombatInfo.attackHeightType = EAttackHeightType::UPPER;
     //TODO: Rename to Attack
-    currentCombatInfo.hitRect = RECT{ 100, 0, 120, 100};
+    currentCombatInfo.hitRect = RECT{ 0, 30, 220, 60};
     UpdateRect(currentCombatInfo.hitRect, pos);
 }
 
@@ -274,6 +314,8 @@ void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
     if (guardHeight == EAttackHeightType::NONE)
     {
         health -= damage;
+        fsm->SetState(4,0,damage/3);
+        currentMachinState = EFiniteStateMachineState::HITSTUN;        
     }
     else
     {
@@ -285,6 +327,8 @@ void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
         else
         {
             health -= damage;
+            fsm->SetState(4,0,damage/3);
+            currentMachinState = EFiniteStateMachineState::HITSTUN;
         }
     }
 }
@@ -310,7 +354,23 @@ void KOF_Character::SetStateToIdle()
 void KOF_Character::CheckAttack()
 {
     // J key : 강펀치
-    if (KeyManager::GetInstance()->IsOnceKeyDown(0x4A))
+    if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_PUNCH))
+    {
+        // StrongPunch();
+        int newState = static_cast<int>(EFiniteStateMachineState::ATTACK) - static_cast<int>(EFiniteStateMachineState::MOVE);
+        fsm->SetState(newState, 0, static_cast<int>(EAttackType::WEAK_PUNCH));
+        currentMachinState = EFiniteStateMachineState::ATTACK;
+    }
+    // K key : 강발
+    else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_KICK))
+    {
+        // StrongKick();
+        int newState = static_cast<int>(EFiniteStateMachineState::ATTACK) - static_cast<int>(EFiniteStateMachineState::MOVE);
+        fsm->SetState(newState, 0, static_cast<int>(EAttackType::WEAK_KICK));
+        currentMachinState = EFiniteStateMachineState::ATTACK;
+    }
+    // J key : 강펀치
+    else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_PUNCH))
     {
         // StrongPunch();
         int newState = static_cast<int>(EFiniteStateMachineState::ATTACK) - static_cast<int>(EFiniteStateMachineState::MOVE);
@@ -318,7 +378,7 @@ void KOF_Character::CheckAttack()
         currentMachinState = EFiniteStateMachineState::ATTACK;
     }
     // K key : 강발
-    if (KeyManager::GetInstance()->IsOnceKeyDown(0x4B))
+    else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_KICK))
     {
         // StrongKick();
         int newState = static_cast<int>(EFiniteStateMachineState::ATTACK) - static_cast<int>(EFiniteStateMachineState::MOVE);
