@@ -122,47 +122,47 @@ void KOF_Character::Init()		// 나
 
 	image = new Image[7];
 
-	if (FAILED(image[0].Init(TEXT("Image/kingDefault.bmp"), 700, 110, 7, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[0].Init(TEXT("Image/king/Kingidle.bmp"), 650, 130, 5, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingDefault.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/Kingidle.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 
-	if (FAILED(image[1].Init(TEXT("Image/kingForward.bmp"), 500, 110, 5, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[1].Init(TEXT("Image/king/KingMovingForward.bmp"), 650, 130, 5, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingForward.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/KingMovingForward.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 
-	if (FAILED(image[2].Init(TEXT("Image/kingForward.bmp"), 500, 110, 5, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[2].Init(TEXT("Image/king/KingMovingBackward.bmp"), 650, 130, 5, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingForward.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/KingMovingBackward.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 
-	if (FAILED(image[3].Init(TEXT("Image/kingStrongPunch.bmp"), 600, 130, 6, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[3].Init(TEXT("Image/king/KingStrongPunch.bmp"), 1690, 130, 13, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingStrongPunch.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/KingStrongPunch.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 
-	if (FAILED(image[4].Init(TEXT("Image/kingStrongKick.bmp"), 1000, 110, 10, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[4].Init(TEXT("Image/king/KingStrongKick.bmp"), 1300, 130, 10, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingStrongKick.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/KingStrongKick.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 
 	// weak
-	if (FAILED(image[5].Init(TEXT("Image/kingWeakPunch.bmp"), 500, 110, 5, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[5].Init(TEXT("Image/king/KingWeakPunch.bmp"), 650, 130, 5, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingWeakPunch.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/KingWeakPunch.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 
-	if (FAILED(image[6].Init(TEXT("Image/kingWeakKick.bmp"), 500, 110, 5, 1,
-		true, RGB(103, 167, 141))))
+	if (FAILED(image[6].Init(TEXT("Image/king/KingWeakKick.bmp"), 1170, 130, 9, 1,
+		true, RGB(224, 0, 237))))
 	{
-		MessageBox(g_hWnd, TEXT("Image/kingWeakKick.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
+		MessageBox(g_hWnd, TEXT("Image/king/KingWeakKick.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
 	}
 }
 
@@ -211,7 +211,7 @@ void KOF_Character::Update()
 		}
 		break;
 	case State::StrongPunch:
-		if (currentFrameIndex >= 6)
+		if (currentFrameIndex >= 13)
 		{
 			currentFrameIndex = 0;
 			currentActionIndex = State::Idle;
@@ -232,7 +232,7 @@ void KOF_Character::Update()
 		}
 		break;
 	case State::WeakKick:
-		if (currentFrameIndex >= 5)
+		if (currentFrameIndex >= 9)
 		{
 			currentFrameIndex = 0;
 			currentActionIndex = State::Idle;
