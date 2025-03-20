@@ -40,8 +40,8 @@ struct combatInfo
 
 struct stateFrameInfo
 {
-	FPOINT hitOffset = { 0,0 };
-	FPOINT attackOffset = { 0,0 };
+	FPOINT hitOffset = { 0.0f,0.0f };
+	FPOINT attackOffset = { 0.0f,0.0f };
 	int damage = 0;		// 공격마다 데미지 다름
-	float frameSpeed = 10.;
+	float frameSpeed = 10.0f;
 };
