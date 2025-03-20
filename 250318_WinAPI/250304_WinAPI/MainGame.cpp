@@ -3,6 +3,7 @@
 #include "Image.h"
 #include "KOF_Iori.h"
 #include "Background.h"
+#include "KOF_TEST.h"
 
 /*
 	실습1. 이오리 집에 보내기
@@ -23,10 +24,20 @@ void MainGame::Init()
 
 	iori = new KOF_Iori();
 	iori->Init();
+
+	test = new KOF_TEST();
+	test->Init();
 }
 
 void MainGame::Release()
 {
+	if (test)
+	{
+		test->Release();
+		delete test;
+		test = nullptr;
+	}
+
 	if (iori)
 	{
 		iori->Release();
@@ -57,6 +68,12 @@ void MainGame::Update()
 	if (iori)
 		iori->Update();
 
+	if (test)
+		test->Update();
+
+	if (backGround)
+		backGround->Camera(iori->GetPos(), test->GetPos());
+
 	InvalidateRect(g_hWnd, NULL, false);
 }
 
@@ -67,8 +84,9 @@ void MainGame::Render(HDC hdc)
 
 	backGround->Render(hBackBufferDC);
 	iori->Render(hBackBufferDC);
+	test->Render(hBackBufferDC);
 
-	wsprintf(szText, TEXT("Mouse X : %d, Y : %d"), mousePosX, mousePosY);
+	wsprintf(szText, TEXT("camera X : %d, Y : %d"), backGround->GetCamera().x, backGround->GetCamera().y);
 	TextOut(hBackBufferDC, 20, 60, szText, wcslen(szText));
 
 	// 백버퍼에 있는 내용을 메인 hdc에 복사
