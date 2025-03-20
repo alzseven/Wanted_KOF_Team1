@@ -12,6 +12,8 @@ private:
 	int currAnimaionFrame;	// 0 ~ 8
 
 public:
+	FPOINT GetPos() { return pos; }
+	
 	void Init();
 	void Release();
 	void Update();

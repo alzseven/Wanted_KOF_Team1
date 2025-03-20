@@ -3,7 +3,7 @@
 
 void KOF_Iori::Init()
 {
-	pos = { 0.0f, 0.0f };
+	pos = { 250.0f, 400.0f };
 	moveSpeed = 5.0f;
 	image = new Image();
 	if (FAILED(image->Init(TEXT("Image/iori_walk.bmp"), 612, 104, 9, 1, 
@@ -28,31 +28,40 @@ void KOF_Iori::Release()
 
 void KOF_Iori::Update()
 {
-	elapsedFrame++;
-	//if (elapsedFrame >= 5)
-	if (KeyManager::GetInstance()->IsOnceKeyUp(VK_SPACE))
+	if (KeyManager::GetInstance()->IsStayKeyDown(VK_SPACE))
+	{	
+		elapsedFrame++;
+		pos.x += 3;
+		currAnimaionFrame += elapsedFrame / 8;
+		
+		if (currAnimaionFrame > 8)
+		{
+			elapsedFrame = 0;
+			currAnimaionFrame = 0;
+			
+		}
+	}
+
+	if (KeyManager::GetInstance()->IsStayKeyDown(VK_SHIFT))
 	{
-		currAnimaionFrame++;
-		Move();
+		elapsedFrame++;
+		pos.x-= 3;
+		currAnimaionFrame += elapsedFrame / 8;
 
 		if (currAnimaionFrame > 8)
 		{
+			elapsedFrame = 0;
 			currAnimaionFrame = 0;
+
 		}
-		elapsedFrame = 0;
 	}
-	//currAnimaionFrame = elapsedFrame / 5;
-	//if (currAnimaionFrame > 8)
-	//{
-	//	currAnimaionFrame = 0;
-	//	elapsedFrame = 0;
-	//}
+
 }
 
 void KOF_Iori::Render(HDC hdc)
 {
 	if (image)
-		image->Render(hdc, pos.x, pos.y, currAnimaionFrame, true);
+		image->Render(hdc, pos.x, pos.y, currAnimaionFrame, false);
 }
 
 void KOF_Iori::Move()
