@@ -215,7 +215,14 @@ void KOF_Character::Update()
 	else if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
 	{
 		currentActionIndex = State::MovingFoward;
-		Pos.x += 2.0f * (frameSpeed / moveSpeed);
+		if(currentFrameIndex >=3)
+		{
+			Pos.x += 2.0f * (frameSpeed / moveSpeed);
+		}
+		else
+		{
+			Pos.x += 1.0f * (frameSpeed / moveSpeed);
+		}
 		if (currentFrameIndex >= 5)
 		{
 			currentFrameIndex = 0;
