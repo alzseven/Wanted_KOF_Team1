@@ -104,3 +104,5 @@ struct CharacterInfo
 	// SpriteSheetInfo* spriteSheet;
 	StateFrameInfo* frameInfo;
 };
+
+const int GUARD_DETECTION_DISTANCE = 150;

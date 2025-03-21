@@ -197,7 +197,8 @@ void KOF_CharacterStateGuard::Update()
 
 void KOF_CharacterStateGuard::Render(HDC hdc)
 {
-    stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
+    
+    stateImage[guardHeightType != EAttackHeightType::NONE ? guardHeightType == EAttackHeightType::UPPER ? 0 : 1 : -1].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
 }
 
 void KOF_CharacterStateGuard::Release()

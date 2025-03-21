@@ -10,22 +10,23 @@ void KOF_Character::Init(const CharacterInfo characterInfo, int playerNum, bool 
 {
 #pragma region SetImages
     int actionCount = static_cast<int>(EKOF_CharacterAction::COUNT_MAX);
-    
+
     image = new Image[actionCount];
 
     actionInfo = new StateFrameInfo[actionCount];
-    
+
     for (int i = 0; i < actionCount; ++i)
     {
         actionInfo[i] = characterInfo.frameInfo[i];
         SpriteSheetInfo currentSpriteSheetInfo = actionInfo[i].spriteSheet;
-        
+
         if (FAILED(image[i].Init(currentSpriteSheetInfo.filename,
             currentSpriteSheetInfo.width, currentSpriteSheetInfo.height,
             currentSpriteSheetInfo.maxFrameX, currentSpriteSheetInfo.maxFrameY,
             currentSpriteSheetInfo.isTransparent, currentSpriteSheetInfo.transColor)))
         {
-            MessageBox(g_hWnd, currentSpriteSheetInfo.filename, TEXT("Warning"), MB_OK);        }
+            MessageBox(g_hWnd, currentSpriteSheetInfo.filename, TEXT("Warning"), MB_OK);
+        }
     }
 #pragma endregion
 #pragma region SetData
@@ -60,7 +61,7 @@ void KOF_Character::Init(const CharacterInfo characterInfo, int playerNum, bool 
             actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)]
         }
     );
-    
+
     moveState = new KOF_CharacterStateMove();
     moveState->Init(
         this,
@@ -119,7 +120,7 @@ void KOF_Character::Init(const CharacterInfo characterInfo, int playerNum, bool 
             actionInfo[static_cast<int>(EKOF_CharacterAction::HIT_STUN)],
         }
     );
-    
+
     states = new KOF_CharacterFiniteStateMachineState*[static_cast<int>(EFiniteStateMachineState::COUNT_MAX)];
     states[static_cast<int>(EFiniteStateMachineState::IDLE)] = idleState;
     states[static_cast<int>(EFiniteStateMachineState::MOVE)] = moveState;
@@ -128,20 +129,19 @@ void KOF_Character::Init(const CharacterInfo characterInfo, int playerNum, bool 
     states[static_cast<int>(EFiniteStateMachineState::HITSTUN)] = hitStunState;
     fsm = new KOF_CharacterFiniteStateMachine();
     fsm->Init(states);
+    ChangeState(EFiniteStateMachineState::IDLE, actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)]);
 
-    
-    currentMachinState = EFiniteStateMachineState::IDLE;
 #pragma endregion
     guardHeight = EAttackHeightType::NONE;
     this->playerNum = playerNum;
-    
+
     switch (this->playerNum)
     {
     case 1:
         // isMoveable = true;
         MOVEFOWARD = 0x44;
         MOVEBACKWARD = 0x41;
-
+        SIT_DOWN = 0x53;
         ATTACK_WEAK_PUNCH = 0x47;
         ATTACK_STRONG_PUNCH = 0x54;
         ATTACK_WEAK_KICK = 0x48;
@@ -152,7 +152,7 @@ void KOF_Character::Init(const CharacterInfo characterInfo, int playerNum, bool 
         // isMoveable = true;
         MOVEFOWARD = 0x4C;
         MOVEBACKWARD = 0x6F;
-
+        SIT_DOWN = 0x6C;
         ATTACK_WEAK_PUNCH = 0x65;
         ATTACK_STRONG_PUNCH = 0x68;
         ATTACK_WEAK_KICK = 0x66;
@@ -180,41 +180,54 @@ void KOF_Character::Update()
         {
         case EFiniteStateMachineState::IDLE:
             // Check if Attack Key Pressed
-                CheckAttack();
-            // Check if Move Key Pressed
+            CheckAttack();
+        // Check if Move Key Pressed
             if (KeyManager::GetInstance()->IsStayKeyDown(MOVEFOWARD))
             {
-                int newState = 1;
-                fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_FORWARD));
-                currentMachinState = EFiniteStateMachineState::MOVE;
+                ChangeState(EFiniteStateMachineState::MOVE,
+                            actionInfo[static_cast<int>(EKOF_CharacterAction::MOVE_FORWARD)], 0,
+                            static_cast<int>(EMoveType::MOVING_FORWARD));
             }
             // Check if Guard
             else if (KeyManager::GetInstance()->IsStayKeyDown(MOVEBACKWARD))
             {
                 // if enemy close
-                //TODO: Get value from config
-                if (enemy && GetDistance(enemy->GetPos(), pos) < 200 && enemy->GetCurrentMachinState() == EFiniteStateMachineState::ATTACK)
+                if (enemy && GetDistance(enemy->GetPos(), pos) < GUARD_DETECTION_DISTANCE && enemy->
+                    GetCurrentMachinState() == EFiniteStateMachineState::ATTACK)
                 {
-                    fsm->SetState(3, 0, 2);
-                    currentMachinState = EFiniteStateMachineState::GUARD;
+                    if (KeyManager::GetInstance()->IsStayKeyDown(SIT_DOWN))
+                    {
+                        ChangeState(EFiniteStateMachineState::GUARD,
+                                    actionInfo[static_cast<int>(EKOF_CharacterAction::GUARD_SIT)], 0,
+                                    static_cast<int>(EAttackHeightType::LOWER));
+                    }
+                    else
+                    {
+                        ChangeState(EFiniteStateMachineState::GUARD,
+                                    actionInfo[static_cast<int>(EKOF_CharacterAction::GUARD_STAND)], 0,
+                                    static_cast<int>(EAttackHeightType::UPPER));
+                    }
+                    // fsm->SetState(3, 0, 2);
+                    // currentMachinState = EFiniteStateMachineState::GUARD;
                 }
                 else
                 {
-                    int newState = 1;
-                    fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
-                    currentMachinState = EFiniteStateMachineState::MOVE;
+                    ChangeState(EFiniteStateMachineState::MOVE,
+                            actionInfo[static_cast<int>(EKOF_CharacterAction::MOVE_BACK)], 0,
+                            static_cast<int>(EMoveType::MOVING_BACKWARD));
+                    // int newState = 1;
+                    // fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
+                    // currentMachinState = EFiniteStateMachineState::MOVE;
                 }
-                // fsm->SetState(static_cast<int>(EFiniteStateMachineState::GUARD), 0);
-                // else
-            
             }
             break;
         case EFiniteStateMachineState::MOVE:
             CheckAttack();
-            if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEFOWARD) || KeyManager::GetInstance()->IsOnceKeyUp(MOVEBACKWARD))
+            if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEFOWARD) || KeyManager::GetInstance()->IsOnceKeyUp(
+                MOVEBACKWARD))
             {
-                fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
-                currentMachinState = EFiniteStateMachineState::IDLE;
+                ChangeState(EFiniteStateMachineState::IDLE,
+                            actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)]);
             }
             break;
         case EFiniteStateMachineState::ATTACK:
@@ -223,8 +236,8 @@ void KOF_Character::Update()
         case EFiniteStateMachineState::GUARD:
             if (KeyManager::GetInstance()->IsOnceKeyUp(MOVEBACKWARD))
             {
-                fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
-                currentMachinState = EFiniteStateMachineState::IDLE;
+                ChangeState(EFiniteStateMachineState::IDLE,
+                            actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)]);
             }
             break;
         case EFiniteStateMachineState::HITSTUN:
@@ -232,19 +245,20 @@ void KOF_Character::Update()
             break;
         default:
             //TODO : Something Wrong
-                break;
+            break;
         }
     }
     else
     {
-        // if (currentMachinState == EFiniteStateMachineState::IDLE)
-        // {
-        //     fsm->SetState(1, 0, 1);
-        //     currentMachinState = EFiniteStateMachineState::MOVE;
-        // }
-        // UpdateRect(rcCollision,pos);
+        // Test codes for unmoving character
+        if (currentMachinState == EFiniteStateMachineState::IDLE)
+        {
+            fsm->SetState(static_cast<int>(EFiniteStateMachineState::ATTACK), 0, static_cast<int>(EAttackType::WEAK_PUNCH));
+            currentMachinState = EFiniteStateMachineState::ATTACK;
+        }
+        UpdateRect(rcCollision,pos);
     }
-    
+
 
     //TODO: Match with timer
     float frameSpeed = 20.0f;
@@ -255,7 +269,7 @@ void KOF_Character::Update()
     {
         elaspedFrame = RESET;
 
-        fsm->Update();   
+        fsm->Update();
     }
 }
 
@@ -264,13 +278,11 @@ void KOF_Character::Render(HDC hdc)
     // 히트박스 확인용
     Rectangle(hdc, hitRect.left, hitRect.top, hitRect.right, hitRect.bottom);
 
-    //
-    // Rectangle(hdc, rcCollision.left, rcCollision.top, rcCollision.right, rcCollision.bottom);
-    
     if (fsm) fsm->Render(hdc);
-    
+
     // 히트박스 확인용
-    Rectangle(hdc,currentCombatInfo.attackRect.left, currentCombatInfo.attackRect.top, currentCombatInfo.attackRect.right, currentCombatInfo.attackRect.bottom);
+    Rectangle(hdc, currentCombatInfo.attackRect.left, currentCombatInfo.attackRect.top,
+              currentCombatInfo.attackRect.right, currentCombatInfo.attackRect.bottom);
 }
 
 void KOF_Character::Attack(EAttackType attackType)
@@ -298,81 +310,30 @@ void KOF_Character::Attack(EAttackType attackType)
         //
         break;
     }
-    
-    // StateFrameInfo currentActionInfo = actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_WEAK_PUNCH)];
-    
+
     currentCombatInfo.damage = currentActionInfo.damage;
-    // currentCombatInfo.attackHeightType = EAttackHeightType::UPPER;
     currentCombatInfo.attackRect = currentActionInfo.rectAttack;
-    UpdateRect(currentCombatInfo.attackRect, {pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y});
+    UpdateRect(currentCombatInfo.attackRect, {
+                   pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y
+               });
     UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
 }
 
 
-// void KOF_Character::WeakPunch()
-// {
-//     StateFrameInfo currentActionInfo = actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_WEAK_PUNCH)];
-//     
-//     currentCombatInfo.damage = currentActionInfo.damage;
-//     currentCombatInfo.attackHeightType = EAttackHeightType::UPPER;
-//     currentCombatInfo.attackRect = currentActionInfo.rectAttack;
-//     UpdateRect(currentCombatInfo.attackRect, {pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y});
-//     UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
-//     
-//     // currentCombatInfo.damage = weakPunchDamage;
-//     // currentCombatInfo.attackHeightType = EAttackHeightType::UPPER;
-//     // currentCombatInfo.attackRect = RECT{ 0, 0, 30, 110};
-//     // UpdateRect(currentCombatInfo.attackRect, {pos.x + 48, pos.y + 75});
-// }
-
-// void KOF_Character::StrongPunch()
-// {
-//     currentCombatInfo.damage = strongPunchDamage;
-//     
-//     currentCombatInfo.attackHeightType = EAttackHeightType::UPPER;
-//     //TODO: Rename to Attack
-//     currentCombatInfo.attackRect = RECT{ 0, 30, 220, 60};
-//     UpdateRect(currentCombatInfo.attackRect, pos);
-// }
-//
-// void KOF_Character::WeakKick()
-// {
-//     currentCombatInfo.damage = weakKickDamage;
-//     
-//     currentCombatInfo.attackHeightType = EAttackHeightType::LOWER;
-//     //TODO: Rename to Attack
-//     currentCombatInfo.attackRect = RECT{ 100, 0, 120, 100};
-//     UpdateRect(currentCombatInfo.attackRect, pos);
-//     
-// }
-//
-// void KOF_Character::StrongKick()
-// {
-//     currentCombatInfo.damage = strongKickDamage;
-//     
-//     currentCombatInfo.attackHeightType = EAttackHeightType::LOWER;
-//     //TODO: Rename to Attack
-//     currentCombatInfo.attackRect = RECT{ 100, 0, 120, 100};
-//     UpdateRect(currentCombatInfo.attackRect, pos);
-// }
-
-bool KOF_Character::Guard(bool)
+void KOF_Character::ResetAttack()
 {
-    return true;
+    currentCombatInfo.damage = 0;
+    UpdateRect(currentCombatInfo.attackRect, {0, 0});
+    currentCombatInfo.attackHeightType = EAttackHeightType::NONE;
 }
-
-// void KOF_Character::GetDamage(int damage)
-// {
-//     health -= damage;
-// }
 
 void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
 {
     if (guardHeight == EAttackHeightType::NONE)
     {
         health -= damage;
-        fsm->SetState(4,0,damage/3);
-        currentMachinState = EFiniteStateMachineState::HITSTUN;        
+        fsm->SetState(4, 0, damage / 3);
+        currentMachinState = EFiniteStateMachineState::HITSTUN;
     }
     else
     {
@@ -384,44 +345,43 @@ void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
         else
         {
             health -= damage;
-            fsm->SetState(4,0,damage/3);
+            fsm->SetState(4, 0, damage / 3);
             currentMachinState = EFiniteStateMachineState::HITSTUN;
         }
     }
 }
-
-// void KOF_Character::Move(int dirX)
-// {
-//     pos.x = pos.x + moveSpeed * dirX < 0
-//                 ? 0 : pos.x + moveSpeed * dirX > WINSIZE_X - 75
-//                 ? WINSIZE_X - 75 : pos.x + moveSpeed * dirX;
-//     // pos.x += moveSpeed * dirX;
-//     UpdateRect(hitRect, pos);
-//     UpdateRect(rcCollision, pos);
-// }
 
 void KOF_Character::Move(EMoveType moveType)
 {
     const int dirX = moveType != EMoveType::COUNT_MAX ? moveType == EMoveType::MOVING_FORWARD ? 1 : -1 : 0;
     pos.x = pos.x + moveSpeed * dirX < 0
                 //TODO:
-                ? 0 : pos.x + moveSpeed * dirX > WINSIZE_X - 75
-                ? WINSIZE_X - 75 : pos.x + moveSpeed * dirX;
+                ? 0
+                : pos.x + moveSpeed * dirX > WINSIZE_X - 75
+                ? WINSIZE_X - 75
+                : pos.x + moveSpeed * dirX;
     UpdateRect(hitRect, pos);
     UpdateRect(rcCollision, pos);
+}
+
+void KOF_Character::SetPos(FPOINT pos)
+{
+    this->pos = pos;
+    UpdateRect(hitRect, pos);
+    UpdateRect(rcCollision, pos);
+    // UpdateRect(attackRect, pos);
 }
 
 void KOF_Character::SetStateToIdle()
 {
     fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
     StateFrameInfo currentActionInfo = actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)];
-    UpdateRect(currentCombatInfo.attackRect, {pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y});
+    UpdateRect(currentCombatInfo.attackRect, {
+                   pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y
+               });
     UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
     currentMachinState = EFiniteStateMachineState::IDLE;
 }
-
-
-
 
 void KOF_Character::CheckAttack()
 {
@@ -457,4 +417,15 @@ void KOF_Character::CheckAttack()
         fsm->SetState(newState, 0, static_cast<int>(EAttackType::STRONG_KICK));
         currentMachinState = EFiniteStateMachineState::ATTACK;
     }
+}
+
+void KOF_Character::ChangeState(EFiniteStateMachineState newState, const StateFrameInfo& newActionInfo,
+                                int exitStateParam, int enterStateParam)
+{
+    fsm->SetState(static_cast<int>(newState), exitStateParam, enterStateParam);
+    currentMachinState = newState;
+    UpdateRect(currentCombatInfo.attackRect, {
+                   pos.x + newActionInfo.rectAttackOffset.x, pos.y + newActionInfo.rectAttackOffset.y
+               });
+    UpdateRect(hitRect, {pos.x + newActionInfo.rectHitOffset.x, pos.y + newActionInfo.rectHitOffset.y});
 }

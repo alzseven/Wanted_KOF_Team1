@@ -18,12 +18,10 @@ class KOF_Character : public GameObject
 private:
     int maxHealth;
     int health;
-    // int weakPunchDamage;
-    // int weakKickDamage;
-    // int strongPunchDamage;
-    // int strongKickDamage;
+    
     FPOINT pos;
     float moveSpeed;
+    
     string characterName;
     RECT hitRect;
     RECT attackRect;
@@ -60,7 +58,7 @@ private:
 
     int MOVEFOWARD;
     int MOVEBACKWARD;
-
+    int SIT_DOWN;
     int ATTACK_WEAK_PUNCH;
     int ATTACK_STRONG_PUNCH;
     int ATTACK_WEAK_KICK;
@@ -69,14 +67,12 @@ private:
     StateFrameInfo* actionInfo;
 public:
     void Attack(EAttackType attackType);
-    void WeakPunch();
-    void StrongPunch();
-    void WeakKick();
-    void StrongKick();
-    bool Guard(bool);
-
+    // void WeakPunch();
+    // void StrongPunch();
+    // void WeakKick();
+    // void StrongKick();
+    // bool Guard(bool);
     
-    // void Init(bool isMoveable = true);
     void Init(const CharacterInfo characterInfo, int playerNum, bool isFlip = false, bool isMoveable = true);
     void Release();
     void Update();
@@ -93,24 +89,19 @@ public:
 
     //TODO:
     inline COMBATINFO GetCurrentAttack(){ return this->currentCombatInfo;}
-    inline void ResetAttack()
-    {
-        currentCombatInfo.damage = 0;
-        UpdateRect(currentCombatInfo.attackRect, {0,0});
-        currentCombatInfo.attackHeightType = EAttackHeightType::NONE;
-    }
-    void GetDamage(int damage);
+    void ResetAttack();
+    // {
+    //     currentCombatInfo.damage = 0;
+    //     UpdateRect(currentCombatInfo.attackRect, {0,0});
+    //     currentCombatInfo.attackHeightType = EAttackHeightType::NONE;
+    // }
+    // void GetDamage(int damage);
     void GetDamage(int damage, EAttackHeightType attackHeight);
-    void Move();
-    void Move(int dirX);
+    // void Move();
+    // void Move(int dirX);
     void Move(EMoveType moveType);
-    inline void SetPos(FPOINT pos)
-    {
-        this->pos = pos;
-        UpdateRect(hitRect, pos);
-        UpdateRect(rcCollision, pos);
-        // UpdateRect(attackRect, pos);
-    }
+    void SetPos(FPOINT pos);
+    void ChangeState(EFiniteStateMachineState newState, const StateFrameInfo& newActionInfo, int exitStateParam = 0, int enterStateParam = 0);
     bool GetIsFlip() const { return this->isFlip;}
     inline FPOINT GetPos() const { return this->pos;}
     void SetStateToIdle();
