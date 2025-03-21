@@ -3,10 +3,10 @@
 
 void KOF_Iori::Init()
 {
-	pos = { WINSIZE_X/4, WINSIZE_Y-350 };
+	pos = { WINSIZE_X/4, WINSIZE_Y-280 };
 	moveSpeed = 5.0f;
 	image = new Image();
-	if (FAILED(image->Init(TEXT("Image/Ryo_move_Back.bmp"),780*2, 130*2, 6, 1, 
+	if (FAILED(image->Init(TEXT("Image/Ryo_move_Front.bmp"),780*2, 130*2, 6, 1, 
 		true, RGB(255,0,255))))
 	{
 		MessageBox(g_hWnd, TEXT("Image/iori_walk.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
