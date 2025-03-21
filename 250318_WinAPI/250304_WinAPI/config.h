@@ -40,7 +40,7 @@ extern HINSTANCE g_hInstance;
 typedef struct combatInfo
 {
 	EAttackHeightType attackHeightType;
-	RECT hitRect;
+	RECT attackRect;
 	int damage = 0;
 
 } COMBATINFO;
@@ -51,7 +51,6 @@ typedef struct uiInfo
 	string name;
 	int health;
 } UIINFO;
-
 
 struct SpriteSheetInfo
 {
@@ -65,15 +64,43 @@ struct SpriteSheetInfo
 	COLORREF transColor;
 };
 
+enum class EKOF_CharacterAction{
+	IDLE,
+	MOVE_FORWARD,
+	MOVE_BACK,
+	ATTACK_WEAK_PUNCH,
+	ATTACK_WEAK_KICK,
+	ATTACK_STRONG_PUNCH,
+	ATTACK_STRONG_KICK,
+	GUARD_STAND,
+	GUARD_SIT,
+	HIT_STUN,
+	COUNT_MAX,
+};
+
+struct StateFrameInfo
+{
+	EKOF_CharacterAction action;
+	SpriteSheetInfo spriteSheet;
+	RECT rectHit;
+	RECT rectAttack;
+	int damage;
+	float frameSpeed;
+	FPOINT rectHitOffset;
+	FPOINT rectAttackOffset;
+};
+
 //TODO: maxHealth;
 //TODO: moveSpeed;
 struct CharacterInfo
 {
-	int health;
-	int weakPunchDamage;
-	int weakKickDamage;
-	int strongPunchDamage;
-	int strongKickDamage;
+	int maxHealth;
+	float moveSpeed;
+	// int weakPunchDamage;
+	// int weakKickDamage;
+	// int strongPunchDamage;
+	// int strongKickDamage;
 	string characterName;
-	SpriteSheetInfo* spriteSheet;
+	// SpriteSheetInfo* spriteSheet;
+	StateFrameInfo* frameInfo;
 };

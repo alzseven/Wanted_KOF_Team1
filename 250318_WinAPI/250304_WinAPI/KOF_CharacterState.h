@@ -1,13 +1,6 @@
 #pragma once
 
-enum class State{
-	Idle,
-	MovingFoward,
-	MovingBack,
-	StrongPunch,
-	StrongKick
 
-};
 
 enum class EAttackHeightType
 {
@@ -18,18 +11,12 @@ enum class EAttackHeightType
 
 enum class EFiniteStateMachineState
 {
-	IDLE					= 0,
-	MOVE					= 1,
-	// MOVE_FORWARD			= 1,
-	// MOVE_BACKWARD		= 2
-	ATTACK					= 3,
-	// ATTACK_WEAK_PUNCH	= 3
-	// ATTACK_WEAK_KICK		= 4
-	// ATTACK_STRONG_PUNCH	= 5
-	// ATTACK_STRONG_KICK	= 6
-	GUARD					= 7,
-	HITSTUN					= 8,
-	COUNT_MAX			//  = 8
+	IDLE,
+	MOVE,
+	ATTACK,
+	GUARD,
+	HITSTUN,
+	COUNT_MAX
 };
 
 enum class EMoveType
@@ -39,6 +26,13 @@ enum class EMoveType
 	COUNT_MAX
 };
 
+/*
+ 	WEAK_PUNCH,
+	WEAK_KICK,
+	STRONG_PUNCH,
+	STRONG_KICK,
+	COUNT_MAX
+ */
 enum class EAttackType
 {
 	WEAK_PUNCH,

@@ -16,11 +16,12 @@ class Image;
 class KOF_Character : public GameObject
 {
 private:
+    int maxHealth;
     int health;
-    int weakPunchDamage;
-    int weakKickDamage;
-    int strongPunchDamage;
-    int strongKickDamage;
+    // int weakPunchDamage;
+    // int weakKickDamage;
+    // int strongPunchDamage;
+    // int strongKickDamage;
     FPOINT pos;
     float moveSpeed;
     string characterName;
@@ -28,9 +29,6 @@ private:
     RECT attackRect;
     RECT rcCollision;
 
-    int currAnimaionFrame;
-
-    // bool isWeakPunching;
     bool isMoveable;
     COMBATINFO currentCombatInfo;
     UIINFO uiInfo;
@@ -67,7 +65,10 @@ private:
     int ATTACK_STRONG_PUNCH;
     int ATTACK_WEAK_KICK;
     int ATTACK_STRONG_KICK;
+
+    StateFrameInfo* actionInfo;
 public:
+    void Attack(EAttackType attackType);
     void WeakPunch();
     void StrongPunch();
     void WeakKick();
@@ -76,12 +77,13 @@ public:
 
     
     // void Init(bool isMoveable = true);
-    void Init(const CharacterInfo info, bool isMoveable = true, bool isFlip = false, int playerNum = 0);
+    void Init(const CharacterInfo characterInfo, int playerNum, bool isFlip = false, bool isMoveable = true);
     void Release();
     void Update();
     void Render(HDC hdc);
     //---
 
+    inline int GetMaxHealth() const { return maxHealth; }
     inline int GetHealth() const { return health; }
     inline RECT GetHitRect() const { return hitRect; }
     inline RECT GetAttackRect() const { return attackRect; }
@@ -94,13 +96,14 @@ public:
     inline void ResetAttack()
     {
         currentCombatInfo.damage = 0;
-        UpdateRect(currentCombatInfo.hitRect, {0,0});
+        UpdateRect(currentCombatInfo.attackRect, {0,0});
         currentCombatInfo.attackHeightType = EAttackHeightType::NONE;
     }
     void GetDamage(int damage);
     void GetDamage(int damage, EAttackHeightType attackHeight);
     void Move();
     void Move(int dirX);
+    void Move(EMoveType moveType);
     inline void SetPos(FPOINT pos)
     {
         this->pos = pos;
