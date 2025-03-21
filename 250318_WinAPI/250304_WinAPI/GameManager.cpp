@@ -337,8 +337,9 @@ void GameManager::Update()
         character2->Update();
 
         character1UI->Update();
-    }
 
+    }
+    background->Camera(character1->GetPos(), character2->GetPos());
     // Handle Collision
     CheckCollisions();
 }

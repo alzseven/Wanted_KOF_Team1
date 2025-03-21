@@ -163,7 +163,7 @@ void Image::RenderRange(HDC hdc, int destX, int destY, int width, int height)
 
 }
 
-void Image::Render(HDC hdc, int destX, int destY, int frameIndex, float cameraX, bool isFlip)
+void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
 {
     //RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
     
@@ -210,6 +210,58 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, float cameraX,
             imageInfo->height,
             imageInfo->hMemDC,
             imageInfo->width  * frameIndex, 0,
+            SRCCOPY
+        );
+    }
+}
+
+void Image::RenderBG(HDC hdc, int destX, int destY, int frameIndex, float cameraX, bool isFlip)
+{
+    //RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
+    
+    imageInfo->currFrameX = frameIndex;
+
+    if (isFlip && isTransparent)
+    {
+        StretchBlt(imageInfo->hTempDC, 0, 0,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+            imageInfo->hMemDC,
+            (imageInfo->frameWidth * imageInfo->currFrameX) + (imageInfo->frameWidth - 1),
+            imageInfo->frameHeight * imageInfo->currFrameY,
+            -imageInfo->frameWidth, imageInfo->frameHeight,
+            SRCCOPY
+        );
+
+        GdiTransparentBlt(hdc,
+            destX, destY,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+
+            imageInfo->hTempDC,
+            0, 0,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+            transColor);
+    }
+    else if (isTransparent)
+    {
+        GdiTransparentBlt(hdc,
+            destX, destY,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+
+            imageInfo->hMemDC,
+            imageInfo->frameWidth * imageInfo->currFrameX,
+            imageInfo->frameHeight * imageInfo->currFrameY,
+            imageInfo->frameWidth, imageInfo->frameHeight,
+            transColor);
+    }
+    else
+    {
+        BitBlt(
+            hdc,
+            destX, destY,
+            imageInfo->width,
+            imageInfo->height / 14,
+            imageInfo->hMemDC,
+            cameraX, imageInfo->height / 14 * frameIndex,
             SRCCOPY
         );
     }
