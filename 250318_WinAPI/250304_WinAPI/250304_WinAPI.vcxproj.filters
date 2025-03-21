@@ -45,9 +45,6 @@
     <ClCompile Include="KOF_Character.cpp">
       <Filter>MainGame\KOF_Character</Filter>
     </ClCompile>
-    <ClCompile Include="AngerGauge.cpp">
-      <Filter>MainGame</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -79,9 +76,6 @@
     </ClInclude>
     <ClInclude Include="KOF_CharacterState.h">
       <Filter>MainGame\KOF_Character</Filter>
-    </ClInclude>
-    <ClInclude Include="AngerGauge.h">
-      <Filter>MainGame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
