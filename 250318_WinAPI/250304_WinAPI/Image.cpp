@@ -138,7 +138,7 @@ void Image::Render(HDC hdc, int destX, int destY)
 
 void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
 {
-    // RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
+    RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
     
     imageInfo->currFrameX = frameIndex;
 
@@ -187,7 +187,6 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
         );
     }
 }
-
 
 void Image::Release()
 {

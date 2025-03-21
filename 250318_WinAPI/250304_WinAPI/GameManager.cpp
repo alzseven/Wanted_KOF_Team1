@@ -132,7 +132,7 @@ void GameManager::Init()
     character1->SetPos({200, 300});
 
     character2 = new KOF_Character();
-    character2->Init(charinfo, false, true, 2);
+    character2->Init(charinfo, true, true, 2);
     character2->SetPos({700, 300});
     //
 
@@ -143,7 +143,7 @@ void GameManager::Init()
     character1UI = new UI;
     character1UI->Init(character1, 200);
     character2UI = new UI;
-    character2UI->Init(character2, 800);
+    character2UI->Init(character2, 100);
 }
 
 void GameManager::Release()
@@ -234,5 +234,6 @@ void GameManager::Render(HDC hdc)
     character2->Render(hdc);
     
     character1UI->Render(hdc);
+    
     character2UI->Render(hdc);
 }
