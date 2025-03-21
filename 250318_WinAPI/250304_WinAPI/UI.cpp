@@ -53,7 +53,7 @@ void UI::Update()
 
 void UI::Update_hostile()
 {
-	hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 0.01f);
+	hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 1);
 	Update_HealthBar(hostileCharacter);
 }
 

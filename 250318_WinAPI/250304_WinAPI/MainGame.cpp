@@ -37,7 +37,7 @@ void MainGame::Init()
 	GameUI = new UI();
 	GameUI->Init_myCharacter();
 	GameUI_Hostile = new UI();
-	GameUI_Hostile->Init_hostile(hostileCharacter);
+	GameUI_Hostile->Init_hostile(/*hostileCharacter*/);
 
 }
 
@@ -86,14 +86,12 @@ void MainGame::Update()
 	
 	if (GameUI)
 	{
-		myCharacter->SetHealth(myCharacter->getCurrentHealth() - 5);	//상수는 체력을 깔 데미지
-		GameUI->Update_HealthBar(myCharacter);
+		GameUI->Update();
 	}
 
 	if (GameUI_Hostile)
 	{
-		hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 1);
-		GameUI_Hostile->Update_HealthBar(hostileCharacter);
+		GameUI_Hostile->Update();
 	}
 	
 	InvalidateRect(g_hWnd, NULL, false);

@@ -11,7 +11,6 @@ private:
 	int boxHeight;
 	float percentage;					//데미지 계산용 변수
 	POINT boxPos;
-	float percentage;
 	KOF_Character* myCharacter;
 	KOF_Character* hostileCharacter;
 public:
