@@ -4,6 +4,7 @@
 #include "KOF_Character.h"
 #include "GameManager.h"
 
+
 void MainGame::Init()
 {
 	backBuffer = new Image();
@@ -12,6 +13,7 @@ void MainGame::Init()
 		MessageBox(g_hWnd, 
 			TEXT("백버퍼 생성 실패"), TEXT("경고"), MB_OK);
 	}
+
 	backGround = new Image();
 	if (FAILED(backGround->Init(TEXT("Image/BackGround.bmp"), WINSIZE_X, WINSIZE_Y)))
 	{
@@ -21,7 +23,6 @@ void MainGame::Init()
 	
 	gameManager = new GameManager();
 	gameManager->Init();
-
 }
 
 void MainGame::Release()
@@ -46,6 +47,7 @@ void MainGame::Release()
 
 void MainGame::Update()
 {
+
 	gameManager->Update();
 	InvalidateRect(g_hWnd, NULL, false);
 }
@@ -56,6 +58,7 @@ void MainGame::Render(HDC hdc)
 	HDC hBackBufferDC = backBuffer->GetMemDC();
 
 	backGround->Render(hBackBufferDC);
+
 	gameManager->Render(hBackBufferDC);
 	
 	// 백버퍼에 있는 내용을 메인 hdc에 복사

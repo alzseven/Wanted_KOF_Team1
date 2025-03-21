@@ -163,7 +163,7 @@ void Image::RenderRange(HDC hdc, int destX, int destY, int width, int height)
 
 }
 
-void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
+void Image::Render(HDC hdc, int destX, int destY, int frameIndex, float cameraX, bool isFlip)
 {
     //RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
     

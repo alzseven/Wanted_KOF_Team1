@@ -4,6 +4,7 @@
 class GameManager;
 class Image;
 class KOF_Character;
+
 class MainGame : public GameObject
 {
 private:
@@ -27,6 +28,8 @@ public:
 	void Update();	
 	void Render(HDC hdc);
 
+	inline KOF_Iori* GetIori() { return iori; }
+	inline KOF_TEST* GetTest() { return test; }
 	LRESULT MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
 	MainGame();
