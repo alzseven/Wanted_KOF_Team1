@@ -3,10 +3,10 @@
 
 void KOF_Iori::Init()
 {
-	pos = { 250.0f, 400.0f };
+	pos = { WINSIZE_X/4, WINSIZE_Y-350 };
 	moveSpeed = 5.0f;
 	image = new Image();
-	if (FAILED(image->Init(TEXT("Image/iori_walk.bmp"), 612, 104, 9, 1, 
+	if (FAILED(image->Init(TEXT("Image/Ryo_move_Back.bmp"),780*2, 130*2, 6, 1, 
 		true, RGB(255,0,255))))
 	{
 		MessageBox(g_hWnd, TEXT("Image/iori_walk.bmp 파일 로드에 실패"), TEXT("경고"), MB_OK);
@@ -32,9 +32,9 @@ void KOF_Iori::Update()
 	{	
 		elapsedFrame++;
 		pos.x += 3;
-		currAnimaionFrame += elapsedFrame / 8;
+		currAnimaionFrame += elapsedFrame / 5;
 		
-		if (currAnimaionFrame > 8)
+		if (currAnimaionFrame > 5)
 		{
 			elapsedFrame = 0;
 			currAnimaionFrame = 0;

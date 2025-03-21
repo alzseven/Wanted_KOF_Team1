@@ -12,7 +12,7 @@ void Background::Init()
 	camera = { WINSIZE_X/2, 0 };
 
 	image = new Image();
-	if (FAILED(image->Init(TEXT("Image/BackGround1.bmp"), WINSIZE_X*2, WINSIZE_Y*14, 1, 14, false, RGB(255, 0, 255))))
+	if (FAILED(image->Init(TEXT("Image/BackGround1.bmp"), WINSIZE_X*3, WINSIZE_Y*14, 1, 14, false, RGB(255, 0, 255))))
 	{
 		MessageBox(g_hWnd,TEXT("이미지 생성 실패"), TEXT("경고"), MB_OK);
 	}
@@ -69,7 +69,7 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 
 			if (KeyManager::GetInstance()->IsStayKeyDown(VK_SHIFT) /*키입력 대신 player1의 왼이동 상태?*/ )
 			{
-				if (player1Pos.x < WINSIZE_X / 2)
+				if (player1Pos.x < WINSIZE_X / 4)
 				{
 					if (!KeyManager::GetInstance()->IsStayKeyDown(VK_INSERT))
 					{
@@ -86,7 +86,7 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 
 			if (KeyManager::GetInstance()->IsStayKeyDown(VK_INSERT) /*player의 상태 */)
 			{
-				if (player2Pos.x < WINSIZE_X / 2)
+				if (player2Pos.x < WINSIZE_X / 4)
 				{
 					camera.x -= 1.5f;
 
@@ -113,7 +113,7 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 
 			if (KeyManager::GetInstance()->IsStayKeyDown(VK_DELETE))
 			{
-				if (player2Pos.x > WINSIZE_X / 2)
+				if (player2Pos.x >  WINSIZE_X / 2)
 				{
 					if (!KeyManager::GetInstance()->IsStayKeyDown(VK_SPACE))
 					{
