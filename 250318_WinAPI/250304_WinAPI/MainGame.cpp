@@ -21,6 +21,7 @@ void MainGame::Init()
 	
 	gameManager = new GameManager();
 	gameManager->Init();
+
 }
 
 void MainGame::Release()

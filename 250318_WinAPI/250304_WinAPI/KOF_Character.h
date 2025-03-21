@@ -97,11 +97,10 @@ public:
     // }
     // void GetDamage(int damage);
     void GetDamage(int damage, EAttackHeightType attackHeight);
-    // void Move();
-    // void Move(int dirX);
     void Move(EMoveType moveType);
     void SetPos(FPOINT pos);
     void ChangeState(EFiniteStateMachineState newState, const StateFrameInfo& newActionInfo, int exitStateParam = 0, int enterStateParam = 0);
+    string GetName() { return characterName; }
     bool GetIsFlip() const { return this->isFlip;}
     inline FPOINT GetPos() const { return this->pos;}
     void SetStateToIdle();
