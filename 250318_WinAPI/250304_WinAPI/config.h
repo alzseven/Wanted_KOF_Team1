@@ -106,3 +106,5 @@ struct CharacterInfo
 };
 
 const int GUARD_DETECTION_DISTANCE = 150;
+const float FRAME_TICK = 1000 / 30.f;
+const int TIMER_TICK = 10;

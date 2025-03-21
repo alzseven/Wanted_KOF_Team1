@@ -213,8 +213,8 @@ void KOF_Character::Update()
                 else
                 {
                     ChangeState(EFiniteStateMachineState::MOVE,
-                            actionInfo[static_cast<int>(EKOF_CharacterAction::MOVE_BACK)], 0,
-                            static_cast<int>(EMoveType::MOVING_BACKWARD));
+                                actionInfo[static_cast<int>(EKOF_CharacterAction::MOVE_BACK)], 0,
+                                static_cast<int>(EMoveType::MOVING_BACKWARD));
                     // int newState = 1;
                     // fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
                     // currentMachinState = EFiniteStateMachineState::MOVE;
@@ -253,21 +253,18 @@ void KOF_Character::Update()
         // Test codes for unmoving character
         if (currentMachinState == EFiniteStateMachineState::IDLE)
         {
-            fsm->SetState(static_cast<int>(EFiniteStateMachineState::ATTACK), 0, static_cast<int>(EAttackType::WEAK_PUNCH));
-            currentMachinState = EFiniteStateMachineState::ATTACK;
+            ChangeState(EFiniteStateMachineState::ATTACK,
+                        actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_WEAK_PUNCH)], 0,
+                        static_cast<int>(EAttackType::WEAK_PUNCH));
         }
-        UpdateRect(rcCollision,pos);
+        UpdateRect(rcCollision, pos);
     }
 
+    elaspedFrame += TIMER_TICK;
 
-    //TODO: Match with timer
-    float frameSpeed = 20.0f;
-
-    elaspedFrame += frameSpeed;
-
-    if (elaspedFrame >= 100.0f)
+    if (elaspedFrame >= FRAME_TICK)
     {
-        elaspedFrame = RESET;
+        elaspedFrame -= FRAME_TICK;
 
         fsm->Update();
     }
@@ -385,37 +382,31 @@ void KOF_Character::SetStateToIdle()
 
 void KOF_Character::CheckAttack()
 {
-    // J key : 강펀치
     if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_PUNCH))
     {
-        // StrongPunch();
-        int newState = static_cast<int>(EFiniteStateMachineState::ATTACK);
-        fsm->SetState(newState, 0, static_cast<int>(EAttackType::WEAK_PUNCH));
-        currentMachinState = EFiniteStateMachineState::ATTACK;
+        ChangeState(EFiniteStateMachineState::ATTACK,
+                    actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_WEAK_PUNCH)], 0,
+                    static_cast<int>(EAttackType::WEAK_PUNCH));
     }
-    // K key : 강발
     else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_WEAK_KICK))
     {
-        // StrongKick();
-        int newState = static_cast<int>(EFiniteStateMachineState::ATTACK);
-        fsm->SetState(newState, 0, static_cast<int>(EAttackType::WEAK_KICK));
-        currentMachinState = EFiniteStateMachineState::ATTACK;
+        ChangeState(EFiniteStateMachineState::ATTACK,
+                    actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_WEAK_KICK)], 0,
+                    static_cast<int>(EAttackType::WEAK_KICK));
     }
     // J key : 강펀치
     else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_PUNCH))
     {
-        // StrongPunch();
-        int newState = static_cast<int>(EFiniteStateMachineState::ATTACK);
-        fsm->SetState(newState, 0, static_cast<int>(EAttackType::STRONG_PUNCH));
-        currentMachinState = EFiniteStateMachineState::ATTACK;
+        ChangeState(EFiniteStateMachineState::ATTACK,
+                    actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_STRONG_PUNCH)], 0,
+                    static_cast<int>(EAttackType::STRONG_PUNCH));
     }
     // K key : 강발
     else if (KeyManager::GetInstance()->IsOnceKeyDown(ATTACK_STRONG_KICK))
     {
-        // StrongKick();
-        int newState = static_cast<int>(EFiniteStateMachineState::ATTACK);
-        fsm->SetState(newState, 0, static_cast<int>(EAttackType::STRONG_KICK));
-        currentMachinState = EFiniteStateMachineState::ATTACK;
+        ChangeState(EFiniteStateMachineState::ATTACK,
+                    actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_STRONG_KICK)], 0,
+                    static_cast<int>(EAttackType::STRONG_KICK));
     }
 }
 
