@@ -4,7 +4,7 @@
 
 void UI::displayPortrait(HDC hdc, KOF_Character* targetCharacter)
 {
-
+	
 }
 
 void UI::winner(HDC hdc, bool isWin)

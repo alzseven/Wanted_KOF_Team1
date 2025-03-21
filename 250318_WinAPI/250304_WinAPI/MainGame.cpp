@@ -37,7 +37,8 @@ void MainGame::Init()
 	GameUI = new UI();
 	GameUI->Init_myCharacter();
 	GameUI_Hostile = new UI();
-	GameUI_Hostile->Init_hostile();
+	GameUI_Hostile->Init_hostile(hostileCharacter);
+
 }
 
 void MainGame::Release()
@@ -85,12 +86,14 @@ void MainGame::Update()
 	
 	if (GameUI)
 	{
-		GameUI->Update();
+		myCharacter->SetHealth(myCharacter->getCurrentHealth() - 5);	//상수는 체력을 깔 데미지
+		GameUI->Update_HealthBar(myCharacter);
 	}
 
 	if (GameUI_Hostile)
 	{
-		GameUI_Hostile->Update();
+		hostileCharacter->SetHealth(hostileCharacter->getCurrentHealth() - 1);
+		GameUI_Hostile->Update_HealthBar(hostileCharacter);
 	}
 	
 	InvalidateRect(g_hWnd, NULL, false);
@@ -122,7 +125,7 @@ LRESULT MainGame::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 	switch (iMessage)
 	{
 	case WM_CREATE:
-		hTimer = (HANDLE)SetTimer(hWnd, 0, 10, NULL);
+		hTimer = (HANDLE)SetTimer(hWnd, 0, 100, NULL);
 
 		break;
 	case WM_TIMER:

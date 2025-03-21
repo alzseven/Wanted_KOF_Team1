@@ -9,6 +9,7 @@ private:
 	int healthForBoxWidth;				//체력박스 테두리길이 변수, 초기화 이후 업데이트 하지 않음
 	int HealthForUpdate;				//체력 업데이트용 변수
 	int boxHeight;
+	float percentage;					//데미지 계산용 변수
 	POINT boxPos;
 	float percentage;
 	KOF_Character* myCharacter;
