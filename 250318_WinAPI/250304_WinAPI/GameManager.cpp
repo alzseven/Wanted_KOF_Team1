@@ -133,7 +133,7 @@ void GameManager::Init()
 
     character2 = new KOF_Character();
     character2->Init(charinfo, true, true, 2);
-    character2->SetPos({700, 300});
+    character2->SetPos({400, 300});
     //
 
     character1->SetEnemy(character2);
@@ -141,9 +141,9 @@ void GameManager::Init()
     
     // UI Init
     character1UI = new UI;
-    character1UI->Init(character1, 200);
-    character2UI = new UI;
-    character2UI->Init(character2, 100);
+    character1UI->Init(character1,character2);
+  //  character2UI = new UI;
+   // character2UI->Init(character2, 100);
 }
 
 void GameManager::Release()
@@ -161,8 +161,8 @@ void GameManager::Release()
     // Release and Delete Characters;
     character1->Release();
     delete character1;
-    character2->Release();
-    delete character2;
+ //   character2->Release();
+ //   delete character2;
 }
 
 void GameManager::Update()
@@ -191,7 +191,6 @@ void GameManager::Update()
         character2->Update();
 
         character1UI->Update();
-        character2UI->Update();
     }
 
     // Handle Collision
@@ -232,8 +231,8 @@ void GameManager::Render(HDC hdc)
 
     character1->Render(hdc);
     character2->Render(hdc);
-    
-    character1UI->Render(hdc);
-    
-    character2UI->Render(hdc);
+    if (character1UI)
+        character1UI->Render(hdc);
+  //  if(character2UI)
+  //  character2UI->Render(hdc);
 }

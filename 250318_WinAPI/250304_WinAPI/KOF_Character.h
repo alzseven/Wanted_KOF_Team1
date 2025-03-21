@@ -99,6 +99,7 @@ public:
     }
     void GetDamage(int damage);
     void GetDamage(int damage, EAttackHeightType attackHeight);
+    string GetName() { return characterName; }
     void Move();
     void Move(int dirX);
     inline void SetPos(FPOINT pos)

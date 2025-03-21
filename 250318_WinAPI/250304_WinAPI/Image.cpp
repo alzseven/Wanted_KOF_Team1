@@ -135,10 +135,37 @@ void Image::Render(HDC hdc, int destX, int destY)
         );
     }
 }
+/*원하는 범위까지 rander*/
+void Image::RenderRange(HDC hdc, int destX, int destY, int width, int height)
+{
+    if (isTransparent)
+    {
+        GdiTransparentBlt(hdc,
+            destX, destY,
+            width, height,
+            imageInfo->hMemDC,
+            0, 0,
+            width, height,
+            transColor);
+    }
+    else
+    {
+        BitBlt(
+            hdc,                // 복사 목적지 DC
+            destX, destY,       // 복사 목적지 위치
+            imageInfo->width,   // 원본에서 복사될 가로크기
+            imageInfo->height,  // 원본에서 복사될 세로크기
+            imageInfo->hMemDC,  // 원본 DC
+            0, 0,               // 원본 복사 시작 위치
+            SRCCOPY             // 복사 옵션
+        );
+    }
+
+}
 
 void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
 {
-    RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
+    //RenderRect(hdc, destX, destY, imageInfo->width / imageInfo->maxFrameX , imageInfo->height / imageInfo->maxFrameY);
     
     imageInfo->currFrameX = frameIndex;
 
@@ -179,10 +206,10 @@ void Image::Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip)
         BitBlt(
             hdc,
             destX, destY,
-            imageInfo->width / 7 ,
+            imageInfo->width  ,
             imageInfo->height,
             imageInfo->hMemDC,
-            imageInfo->width / 7 * frameIndex, 0,
+            imageInfo->width  * frameIndex, 0,
             SRCCOPY
         );
     }

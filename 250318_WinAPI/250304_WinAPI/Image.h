@@ -72,6 +72,7 @@ public:
 
 	// 화면에 출력
 	void Render(HDC hdc, int destX = 0, int destY = 0);
+	void RenderRange(HDC hdc, int destX = 0, int destY = 0, int width = 0, int height = 0);
 	void Render(HDC hdc, int destX, int destY, int frameIndex, bool isFlip = false);
 	
 	
