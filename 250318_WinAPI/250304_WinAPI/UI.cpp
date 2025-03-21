@@ -56,7 +56,7 @@ void UI::Render(HDC hdc)
     if (character1Portrait)
         character1Portrait->Render(hdc, -portraitOffset,-portraitOffset,0,false);
     if (character2Portrait)
-       character2Portrait->Render(hdc, WINSIZE_X - WINSIZE_X / 8 + portraitOffset, 0,0,true);
+       character2Portrait->Render(hdc, WINSIZE_X - WINSIZE_X / 8 + portraitOffset, -4,0,true);
     
 
 }
