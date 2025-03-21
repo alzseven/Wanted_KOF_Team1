@@ -36,14 +36,26 @@
     <ClCompile Include="Image.cpp">
       <Filter>2D Framework</Filter>
     </ClCompile>
-    <ClCompile Include="KOF_Iori.cpp">
-      <Filter>MainGame\KOF_Character</Filter>
-    </ClCompile>
     <ClCompile Include="KeyManager.cpp">
       <Filter>2D Framework</Filter>
     </ClCompile>
     <ClCompile Include="KOF_Character.cpp">
       <Filter>MainGame\KOF_Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="KOF_CharacterFiniteStateMachine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="KOF_CharacterFiniteStateMachineState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +74,6 @@
     <ClInclude Include="Image.h">
       <Filter>2D Framework</Filter>
     </ClInclude>
-    <ClInclude Include="KOF_Iori.h">
-      <Filter>MainGame\KOF_Character</Filter>
-    </ClInclude>
     <ClInclude Include="KeyManager.h">
       <Filter>2D Framework</Filter>
     </ClInclude>
@@ -76,6 +85,21 @@
     </ClInclude>
     <ClInclude Include="KOF_CharacterState.h">
       <Filter>MainGame\KOF_Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KOF_CharacterFiniteStateMachine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KOF_CharacterFiniteStateMachineState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
