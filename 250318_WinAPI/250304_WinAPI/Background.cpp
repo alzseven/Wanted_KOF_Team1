@@ -66,8 +66,8 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 	// 플레이어 두개 사이의 거리에 따라서 배경이 움직이는지 확인
 
 
-			// if (KeyManager::GetInstance()->IsStayKeyDown(VK_SHIFT) /*키입력 대신 player1의 왼이동 상태?*/ )
-			// {
+			if (KeyManager::GetInstance()->IsStayKeyDown(0x41) /*키입력 대신 player1의 왼이동 상태?*/ )
+			{
 				if (player1Pos.x < WINSIZE_X / 4)
 				{
 					if (!KeyManager::GetInstance()->IsStayKeyDown(VK_INSERT))
@@ -81,10 +81,10 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 					}
 					
 				}
-			// }
+			}
 
-			// if (KeyManager::GetInstance()->IsStayKeyDown(VK_INSERT) /*player의 상태 */)
-			// {
+			if (KeyManager::GetInstance()->IsStayKeyDown(0x4A) /*player의 상태 */)
+			{
 				if (player2Pos.x < WINSIZE_X / 4)
 				{
 					camera.x -= 1.5f;
@@ -95,10 +95,10 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 					}
 
 				}
-			// }
+			}
 
-			// if (KeyManager::GetInstance()->IsStayKeyDown(VK_SPACE))
-			// {
+			if (KeyManager::GetInstance()->IsStayKeyDown(0x44))
+			{
 				if (player1Pos.x > WINSIZE_X / 2)
 				{
 					camera.x += 1.5f;
@@ -108,10 +108,10 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 						camera.x = WINSIZE_X;
 					}
 				}
-			// }
+			}
 
-			// if (KeyManager::GetInstance()->IsStayKeyDown(VK_DELETE))
-			// {
+			if (KeyManager::GetInstance()->IsStayKeyDown(0x4C))
+			{
 				if (player2Pos.x >  WINSIZE_X / 2)
 				{
 					if (!KeyManager::GetInstance()->IsStayKeyDown(VK_SPACE))
@@ -124,5 +124,5 @@ void Background::Camera(FPOINT player1Pos, FPOINT player2Pos)
 						}
 					}
 				}
-			// }
+			}
 }
