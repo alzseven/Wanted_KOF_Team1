@@ -207,17 +207,12 @@ void KOF_Character::Update()
                                     actionInfo[static_cast<int>(EKOF_CharacterAction::GUARD_STAND)], 0,
                                     static_cast<int>(EAttackHeightType::UPPER));
                     }
-                    // fsm->SetState(3, 0, 2);
-                    // currentMachinState = EFiniteStateMachineState::GUARD;
                 }
                 else
                 {
                     ChangeState(EFiniteStateMachineState::MOVE,
                                 actionInfo[static_cast<int>(EKOF_CharacterAction::MOVE_BACK)], 0,
                                 static_cast<int>(EMoveType::MOVING_BACKWARD));
-                    // int newState = 1;
-                    // fsm->SetState(newState, 0, static_cast<int>(EMoveType::MOVING_BACKWARD));
-                    // currentMachinState = EFiniteStateMachineState::MOVE;
                 }
             }
             break;
@@ -257,7 +252,6 @@ void KOF_Character::Update()
                         actionInfo[static_cast<int>(EKOF_CharacterAction::ATTACK_WEAK_PUNCH)], 0,
                         static_cast<int>(EAttackType::WEAK_PUNCH));
         }
-        UpdateRect(rcCollision, pos);
     }
 
     elaspedFrame += TIMER_TICK;
@@ -275,11 +269,13 @@ void KOF_Character::Render(HDC hdc)
     // 히트박스 확인용
     Rectangle(hdc, hitRect.left, hitRect.top, hitRect.right, hitRect.bottom);
 
-    if (fsm) fsm->Render(hdc);
-
     // 히트박스 확인용
     Rectangle(hdc, currentCombatInfo.attackRect.left, currentCombatInfo.attackRect.top,
               currentCombatInfo.attackRect.right, currentCombatInfo.attackRect.bottom);
+    
+    if (fsm) fsm->Render(hdc,isFlip);
+
+    
 }
 
 void KOF_Character::Attack(EAttackType attackType)
@@ -312,8 +308,7 @@ void KOF_Character::Attack(EAttackType attackType)
     currentCombatInfo.attackRect = currentActionInfo.rectAttack;
     UpdateRect(currentCombatInfo.attackRect, {
                    pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y
-               });
-    UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
+    });
 }
 
 
@@ -329,8 +324,9 @@ void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
     if (guardHeight == EAttackHeightType::NONE)
     {
         health -= damage;
-        fsm->SetState(4, 0, damage / 3);
-        currentMachinState = EFiniteStateMachineState::HITSTUN;
+        ChangeState(EFiniteStateMachineState::HITSTUN,
+                            actionInfo[static_cast<int>(EKOF_CharacterAction::HIT_STUN)], 0,
+                            damage / 3);
     }
     else
     {
@@ -342,42 +338,45 @@ void KOF_Character::GetDamage(int damage, EAttackHeightType attackHeight)
         else
         {
             health -= damage;
-            fsm->SetState(4, 0, damage / 3);
-            currentMachinState = EFiniteStateMachineState::HITSTUN;
+            ChangeState(EFiniteStateMachineState::HITSTUN,
+                            actionInfo[static_cast<int>(EKOF_CharacterAction::HIT_STUN)], 0,
+                            damage / 3);
         }
     }
 }
 
 void KOF_Character::Move(EMoveType moveType)
 {
-    const int dirX = moveType != EMoveType::COUNT_MAX ? moveType == EMoveType::MOVING_FORWARD ? 1 : -1 : 0;
+    int dirX = moveType != EMoveType::COUNT_MAX ? moveType == EMoveType::MOVING_FORWARD ? 1 : -1 : 0;
+    dirX *= isFlip ? -1 : 1;
     pos.x = pos.x + moveSpeed * dirX < 0
                 //TODO:
                 ? 0
                 : pos.x + moveSpeed * dirX > WINSIZE_X - 75
                 ? WINSIZE_X - 75
                 : pos.x + moveSpeed * dirX;
-    UpdateRect(hitRect, pos);
-    UpdateRect(rcCollision, pos);
+    int actionIndex = moveType != EMoveType::COUNT_MAX ? moveType == EMoveType::MOVING_FORWARD ? static_cast<int>(EKOF_CharacterAction::MOVE_FORWARD) : static_cast<int>(EKOF_CharacterAction::MOVE_BACK) : 0;
+    StateFrameInfo currentActionInfo = actionInfo[actionIndex];
+    hitRect = currentActionInfo.rectHit;
+    rcCollision = hitRect;
+    UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
+    UpdateRect(rcCollision, {pos.x + currentActionInfo.rectHitOffset.x,pos.y + currentActionInfo.rectHitOffset.y});
 }
 
 void KOF_Character::SetPos(FPOINT pos)
 {
     this->pos = pos;
-    UpdateRect(hitRect, pos);
-    UpdateRect(rcCollision, pos);
-    // UpdateRect(attackRect, pos);
+    
+    StateFrameInfo currentActionInfo = actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)];
+    hitRect = currentActionInfo.rectHit;
+    rcCollision = hitRect;
+    UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
+    UpdateRect(rcCollision, {pos.x + currentActionInfo.rectHitOffset.x,pos.y + currentActionInfo.rectHitOffset.y});
 }
 
 void KOF_Character::SetStateToIdle()
 {
-    fsm->SetState(static_cast<int>(EFiniteStateMachineState::IDLE));
-    StateFrameInfo currentActionInfo = actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)];
-    UpdateRect(currentCombatInfo.attackRect, {
-                   pos.x + currentActionInfo.rectAttackOffset.x, pos.y + currentActionInfo.rectAttackOffset.y
-               });
-    UpdateRect(hitRect, {pos.x + currentActionInfo.rectHitOffset.x, pos.y + currentActionInfo.rectHitOffset.y});
-    currentMachinState = EFiniteStateMachineState::IDLE;
+    ChangeState(EFiniteStateMachineState::IDLE, actionInfo[static_cast<int>(EKOF_CharacterAction::IDLE)]);
 }
 
 void KOF_Character::CheckAttack()
@@ -415,8 +414,10 @@ void KOF_Character::ChangeState(EFiniteStateMachineState newState, const StateFr
 {
     fsm->SetState(static_cast<int>(newState), exitStateParam, enterStateParam);
     currentMachinState = newState;
-    UpdateRect(currentCombatInfo.attackRect, {
-                   pos.x + newActionInfo.rectAttackOffset.x, pos.y + newActionInfo.rectAttackOffset.y
-               });
+    hitRect = newActionInfo.rectHit;
+    rcCollision = hitRect;
+    currentCombatInfo.attackRect = newActionInfo.rectAttack;
+    ResetAttack();
     UpdateRect(hitRect, {pos.x + newActionInfo.rectHitOffset.x, pos.y + newActionInfo.rectHitOffset.y});
+    UpdateRect(rcCollision, {pos.x + newActionInfo.rectHitOffset.x, pos.y + newActionInfo.rectHitOffset.y});
 }

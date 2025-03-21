@@ -57,9 +57,9 @@ void KOF_CharacterStateIdle::Release()
     KOF_CharacterFiniteStateMachineState::Release();
 }
 
-void KOF_CharacterStateIdle::Render(HDC hdc)
+void KOF_CharacterStateIdle::Render(HDC hdc, bool isFlip)
 {
-    stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
+    stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex, isFlip);
 }
 
 #pragma endregion
@@ -87,9 +87,9 @@ void KOF_CharacterStateMove::Update()
     currentFrameIndex = currentFrameIndex + 1 > maxFrameCount ? 0 : currentFrameIndex + 1;
 }
 
-void KOF_CharacterStateMove::Render(HDC hdc)
+void KOF_CharacterStateMove::Render(HDC hdc, bool isFlip)
 {
-    stateImage[static_cast<int>(moveType)].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
+    stateImage[static_cast<int>(moveType)].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex, isFlip);
 }
 
 void KOF_CharacterStateMove::Release()
@@ -145,10 +145,10 @@ void KOF_CharacterStateAttack::Update()
     if (currentFrameIndex > maxFrameCount) character->SetStateToIdle();
 }
 
-void KOF_CharacterStateAttack::Render(HDC hdc)
+void KOF_CharacterStateAttack::Render(HDC hdc, bool isFlip)
 {
     // KOF_CharacterFiniteStateMachineState::Render(hdc);
-    stateImage[static_cast<int>(attackType)].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
+    stateImage[static_cast<int>(attackType)].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex, isFlip);
 }
 void KOF_CharacterStateAttack::Release()
 {
@@ -195,10 +195,9 @@ void KOF_CharacterStateGuard::Update()
     if (currentFrameIndex > maxFrameCount) currentFrameIndex = maxFrameCount;
 }
 
-void KOF_CharacterStateGuard::Render(HDC hdc)
+void KOF_CharacterStateGuard::Render(HDC hdc, bool isFlip)
 {
-    
-    stateImage[guardHeightType != EAttackHeightType::NONE ? guardHeightType == EAttackHeightType::UPPER ? 0 : 1 : -1].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex);
+    stateImage[guardHeightType != EAttackHeightType::NONE ? guardHeightType == EAttackHeightType::UPPER ? 0 : 1 : -1].Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex, isFlip);
 }
 
 void KOF_CharacterStateGuard::Release()
@@ -231,10 +230,10 @@ void KOF_CharacterStateHitStun::Update()
     if (currentFrameIndex > stunFrame) character->SetStateToIdle();
 }
 
-void KOF_CharacterStateHitStun::Render(HDC hdc)
+void KOF_CharacterStateHitStun::Render(HDC hdc, bool isFlip)
 {
     // KOF_CharacterFiniteStateMachineState::Render(hdc);
-    stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex >= maxFrameCount ? maxFrameCount : currentFrameIndex);
+    stateImage->Render(hdc, character->GetPos().x, character->GetPos().y, currentFrameIndex >= maxFrameCount ? maxFrameCount : currentFrameIndex, isFlip);
 }
 
 void KOF_CharacterStateHitStun::Release()

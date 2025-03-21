@@ -111,6 +111,7 @@ public:
     inline void SetEnemy(KOF_Character* pEnemy) {this->enemy = pEnemy;}
     // inline void SetEnemyPos(FPOINT* pEnemyPos) { this->enemyPos = pEnemyPos;}
     inline EFiniteStateMachineState GetCurrentMachinState() const { return this->currentMachinState;}
+    inline float GetMoveSpeed() const { return this->moveSpeed; }
 };
 
 

@@ -25,8 +25,8 @@ void KOF_CharacterFiniteStateMachine::Release()
         delete states;
 }
 
-void KOF_CharacterFiniteStateMachine::Render(HDC hdc)
+void KOF_CharacterFiniteStateMachine::Render(HDC hdc, bool isFlip)
 {
-    states[currentState]->Render(hdc);
+    states[currentState]->Render(hdc, isFlip);
 }
 

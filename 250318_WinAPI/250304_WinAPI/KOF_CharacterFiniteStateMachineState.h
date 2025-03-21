@@ -23,7 +23,7 @@ public:
     virtual void ExitState(int stateParam = 0) = 0;
     virtual void Update() = 0;
     virtual void Release();
-    virtual void Render(HDC hdc) = 0;
+    virtual void Render(HDC hdc, bool isFlip = false) = 0;
 };
 
 class KOF_CharacterStateIdle : public KOF_CharacterFiniteStateMachineState
@@ -34,7 +34,7 @@ public:
     void EnterState(int stateParam = 0) override;
     void ExitState(int stateParam = 0) override;
     void Update() override;
-    void Render(HDC hdc) override;
+    void Render(HDC hdc, bool isFlip = false) override;
     void Release() override;
     // ~KOF_CharacterStateIdle() override;
 };
@@ -49,7 +49,7 @@ public:
     void EnterState(int stateParam = 0) override;
     void ExitState(int stateParam = 0) override;
     void Update() override;
-    void Render(HDC hdc) override;
+    void Render(HDC hdc, bool isFlip = false) override;
     void Release() override;
 };
 
@@ -63,7 +63,7 @@ public:
     void EnterState(int stateParam = 0) override;
     void ExitState(int stateParam = 0) override;
     void Update() override;
-    void Render(HDC hdc) override;
+    void Render(HDC hdc, bool isFlip = false) override;
     void Release() override;
     void SetFrameIndexMax(int frameIndexMax);
 };
@@ -78,7 +78,7 @@ public:
     void EnterState(int stateParam = 0) override;
     void ExitState(int stateParam = 0) override;
     void Update() override;
-    void Render(HDC hdc) override;
+    void Render(HDC hdc, bool isFlip = false) override;
     void Release() override;
 };
 
@@ -93,6 +93,6 @@ public:
     void EnterState(int stateParam = 0) override;
     void ExitState(int stateParam = 0) override;
     void Update() override;
-    void Render(HDC hdc) override;
+    void Render(HDC hdc, bool isFlip = false) override;
     void Release() override;
 };
