@@ -25,7 +25,7 @@ void GameManager::Init()
                 SpriteSheetInfo{
                     "King_Idle",
                     TEXT("Image/King/KingIdle.bmp"),
-                    650, 130, 6, 1, true,RGB(224, 0, 237)
+                    780, 130, 6, 1, true,RGB(224, 0, 237)
                 },
                 RECT{0, 0, 30, 110},
                 RECT{0, 0, 30, 20},
