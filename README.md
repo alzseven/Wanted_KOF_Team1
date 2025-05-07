@@ -41,12 +41,6 @@ git clone https://github.com/alzseven/Wanted_KOF_Team1.git
 
 2. Visual Studio에서 솔루션 파일 열기
 
-```
-cd Wanted_KOF_Team1/250318_WinAPI
-```
-
-솔루션 파일(.sln)을 Visual Studio에서 엽니다.
-
 3. 프로젝트 빌드 및 실행 Visual Studio에서 솔루션을 빌드하고 실행합니다.
 
 ## 조작 방법
