@@ -79,4 +79,4 @@ cd Wanted_KOF_Team1/250318_WinAPI
 
 ## 스크린샷
 
-(https://github.com/alzseven/Wanted_KOF_Team1/blob/master/KOFClone_Screenshot.png)
+[Screenshot](https://github.com/alzseven/Wanted_KOF_Team1/blob/master/KOFClone_Screenshot.png)
