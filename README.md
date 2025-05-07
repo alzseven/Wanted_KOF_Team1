@@ -2,7 +2,7 @@
 
 ## 프로젝트 소개
 
-이 프로젝트는 SNK의 인기 격투 게임 시리즈인 '더 킹 오브 파이터즈(The King of Fighters)'를 Windows API(WinAPI)와 C++를 이용하여 모작한 게임입니다. 과 충돌처리 로직의 학습을 주 목표로 합니다.
+이 프로젝트는 SNK의 인기 격투 게임 시리즈인 '더 킹 오브 파이터즈(The King of Fighters)'를 Windows API(WinAPI)와 C++를 이용하여 모작한 게임입니다.
 
 ## 프로젝트 목표 및 의의
 
