@@ -120,35 +120,40 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="KeyManager.cpp" />
-    <ClCompile Include="KOF_Iori.cpp" />
+    <ClCompile Include="KOF_Character.cpp" />
+    <ClCompile Include="KOF_CharacterFiniteStateMachine.cpp" />
+    <ClCompile Include="KOF_CharacterFiniteStateMachineState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="Missile.cpp" />
-    <ClCompile Include="Tank.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="CommonFunction.h" />
     <ClInclude Include="config.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="KeyManager.h" />
-    <ClInclude Include="KOF_Iori.h" />
+    <ClInclude Include="KOF_Character.h" />
+    <ClInclude Include="KOF_CharacterFiniteStateMachine.h" />
+    <ClInclude Include="KOF_CharacterFiniteStateMachineState.h" />
+    <ClInclude Include="KOF_CharacterState.h" />
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="Missile.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="Tank.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
